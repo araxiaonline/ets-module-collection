@@ -1,0 +1,7 @@
+ets.env
+node_modules
+dist
+.vscode
+wow-wotlk-declarations
+
+

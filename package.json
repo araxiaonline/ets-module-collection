@@ -1,0 +1,20 @@
+{
+  "scripts": {
+    "clean": "dotenv -e ets.env cross-var rimraf %ETS_BUILD_ROOT%",
+    "build": "ets build",
+    "dev": "npm run clean && ets build && npm run dev-copy",
+    "dev-copy": "dotenv -e ets.env cross-var ncp %ETS_BUILD_ROOT% %DEV_MODULE_PATH%",
+    "dev:watch": "ets build -w && npm run dev-copy"
+  },
+  "devDependencies": {
+    "cross-var": "^1.1.0",
+    "dotenv-cli": "^7.3.0",
+    "ncp": "^2.0.0",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "ts-node": "^10.9.1",
+    "wow-eluna-ts-module": "^1.6.7"
+  }
+}
