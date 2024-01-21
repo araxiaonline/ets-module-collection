@@ -45,7 +45,7 @@ function determineWin(): number {
         if(multiplier == 3) {
             tokens = 100; 
         }
-        gold = multiplier * 5000;                        
+        gold = multiplier * 2000;                        
         win = 2;
     }
 
@@ -53,7 +53,7 @@ function determineWin(): number {
         if(multiplier == 3) {
             tokens = 50; 
         }
-        gold = multiplier * 1000;        
+        gold = multiplier * 500;        
         win = 1; 
     }
 
@@ -68,22 +68,22 @@ function determineWin(): number {
     
     ) {
         if(multiplier == 3) {
-            tokens = 20; 
+            tokens = 3; 
         }
-        gold = multiplier * 500;
+        gold = multiplier * 300;
         win = 1;
     }
 
     // handle two of the same class in a row
     if((slotSpin[0] == slotSpin[1]) && win == 0) {
-        gold = multiplier * 250;        
+        gold = multiplier * 150;        
         win = 1;
 
         if(slotSpin[1] == 1) {
             if(multiplier == 3) {
                 tokens = 3; 
             }
-            gold = multiplier * 250;
+            gold = multiplier * 150;
             win = 1;
         }
     }
