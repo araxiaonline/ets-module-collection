@@ -13,8 +13,8 @@ const TELEPORT_ITEM_ENTRY = 910006;
 
 const TeleportHandler: item_event_on_use = (event: number, player: Player, item: Item, target: Unit) => {       
 
-    if(player.IsHorde()) {
-        const master = PerformIngameSpawn(1, 2851, player.GetMapId(), player.GetInstanceId(), player.GetX(), player.GetY(), player.GetZ(), player.GetO(), false, 1, 0) as Creature;        
+    if(player.IsHorde()) {        
+        const master = player.SpawnCreature(2851, player.GetX(), player.GetY(), player.GetZ(), player.GetO(), TempSummonType.TEMPSUMMON_MANUAL_DESPAWN);        
         player.SendTaxiMenu(master);
     } else {        
         const master = player.SpawnCreature(1571, player.GetX(), player.GetY(), player.GetZ(), player.GetO(), TempSummonType.TEMPSUMMON_MANUAL_DESPAWN);        
