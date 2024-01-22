@@ -4,7 +4,8 @@
     "build": "ets build",
     "dev": "npm run clean && ets build && npm run dev-copy",
     "dev-copy": "dotenv -e ets.env cross-var ncp %ETS_BUILD_ROOT% %DEV_MODULE_PATH%",
-    "dev:watch": "ets build -w && npm run dev-copy"
+    "dev:watch": "ets build -w",
+    "deploy:dev": "npm run build && npx ets deploy -e dev"
   },
   "devDependencies": {
     "cross-var": "^1.1.0",
