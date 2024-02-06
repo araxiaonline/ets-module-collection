@@ -334,11 +334,14 @@ if(!aio.AddAddon()) {
             if(button == "LeftButton") {
                 PickupItem(itemId);
                 return; 
-            }
-                //botStorage.EquipBotItem(botId, <BotEquipmentSlotNum>frame.GetID(), itemId);
+            }             
         } 
 
         if(compItem) {
+            const slot = frame.GetID(); 
+            
+            aio.Handle("BotMgr", "EquipItem",botId, slot, compItemId); 
+            // Attempt to equip the item. 
             PlaySound("INTERFACESOUND_CURSORDROPOBJECT");
             ClearCursor(); 
         }

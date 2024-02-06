@@ -114,9 +114,40 @@ function GetBotDetails(bot: Creature): BotData {
         }                
     }
     
-    return NpcDetailStorage[bot.GetEntry()];
-    
+    return NpcDetailStorage[bot.GetEntry()];    
 }
+
+/**
+ * Equip an item for the bot and update bot details
+ * @param event 
+ * @param player 
+ * @param command 
+ * @returns 
+ */
+function EquipItem(botEntry: number, slot: BotEquipmentSlotNum, item: number): void {
+    
+
+    print(`Bot: ${botEntry} Slot: ${slot} Item: ${item}`); 
+
+    // const isEligible = bot.BotCanEquipItem(item, slot);
+
+
+
+    //    if(!isEligible) {
+    //        log.error(`Bot cannot equip item: ${item} in slot: ${slot}`);
+    //        return; 
+    //    }
+
+    //    if(bot.BotEquipItem(item, slot)) {
+    //         NpcDetailStorage[bot.GetEntry()].equipment[slot] = item;
+    //         aio.Handle(bot.GetBotOwner(), 'BotMgr', 'EquipSuccess', { slot, item});
+    //    } else {
+    //         log.error(`Bot failed to equip item: ${item} in slot: ${slot}`);
+    //         aio.Handle(bot.GetBotOwner(), 'BotMgr', 'EquipFail', { slot, item});
+    //      }  
+                     
+}
+
 
 const ShowBotMgr: player_event_on_command = (event: number,player: Player, command: string): boolean => {
     if(command == 'botmgr') {
@@ -154,8 +185,6 @@ function GetBotPanelInfo(player: Player): void  {
         return; 
     }
 
-
-
     try {
         
         const target = player.GetSelection(); 
@@ -169,22 +198,10 @@ function GetBotPanelInfo(player: Player): void  {
         print(`BotMgr: Error parsing bot entry: ${e}`);
     }    
 }
-
-function ShowComplexArray(items: Record<string,number>) {
-
-    try {
-        for (const [key, value] of Object.entries(items)) {
-            print(`${key}: ${value}`);
-        }
-    } catch (e) {
-        PrintError(`BotMgr: Error showing complex array: ${e}`);
-    }
-    
-}
-
 const botMgrHandlers = aio.AddHandlers('BotMgr', {    
     TargetIsEligible,
-    GetBotPanelInfo
+    GetBotPanelInfo, 
+    EquipItem
 }); 
 
 RegisterPlayerEvent(
