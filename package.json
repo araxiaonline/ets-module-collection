@@ -10,12 +10,16 @@
   "devDependencies": {
     "cross-var": "^1.1.0",
     "dotenv-cli": "^7.3.0",
-    "ncp": "^2.0.0",
     "rimraf": "^5.0.5",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "typescript-to-lua": "^1.23.0"
   },
   "dependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^20.11.15",
+    "D": "^1.0.0",
+    "fs-extra": "^11.2.0",
     "ts-node": "^10.9.1",
-    "wow-eluna-ts-module": "^1.6.7"
+    "wow-eluna-ts-module": "^1.8.0"
   }
 }

@@ -7,6 +7,7 @@ export function colors(name: string) {
         PURPLE: "|cff9F3FFF",
         BLUE: "|cff0070dd",
         ORANGE: "|cffFF8400",
+        YELLOW: "|cffFFFF00",
     }; 
 
     const keyName = name.toUpperCase();
