@@ -14,10 +14,20 @@ import {
     ClassesMapping, 
     CharacterClass,
     RacesMapping,
-    CharacterRace
+    CharacterRace,
+    ItemQuality,
+    QualityType
  } from "../../constants/idmaps";
 
+export type Equipment = {
+    entry: number,
+    link: string, 
+    quality?: QualityType,
+    itemLevel?: number,
+    enchantmentId?: number,
+}
 
+export type EquipmentList = Record<BotEquipmentSlotNum, Equipment>;
 
  /**
   * Everything we ever wanted to know about the bot info on load
@@ -30,7 +40,7 @@ import {
     classId: number,
     race: CharacterRace,
     raceId: number,
-    equipment?: Record<string, number>,  // SlotName - ItemId  See BotEquipSlot
+    equipment?: EquipmentList,  // SlotName - ItemId  See BotEquipSlot
     stats?: Record<number, number>,      // StatId - Value
 }; 
 
@@ -38,9 +48,6 @@ import {
  * @todo Move to a data mgr class eventually
  */
 const NpcDetailStorage = {} as Record<number, BotData>; 
-
-// // cheap way to load everything on the server side and force so client as access. (Don't love this at all will need to work back into plugin); 
-// const loader = BotStat || BotEquipSlot || BotEquipLast || BotStatLast || ClassesMapping || RacesMapping;
 
 /**
  * Get the current targetted npc bot or returns undefined if not a bot. 
@@ -83,12 +90,42 @@ function TargetIsEligible(player: Player) {
     return false;
 }
 
+function GetMeleeStats () {
+    return { 
+        left: [
+            BotStat.STRENGTH,
+            BotStat.AGILITY,
+            BotStat.DAMAGE_MIN, 
+            BotStat.DAMAGE_MAX,                        
+            BotStat.ATTACK_POWER,
+            BotStat.HIT_RATING,
+            BotStat.CRIT_RATING,            
+            BotStat.EXPERTISE,
+            BotStat.ARMOR_PENETRATION_RATING,
+        ], 
+        right: [            
+            BotStat.HASTE_RATING,            
+            BotStat.ARMOR,
+            BotStat.STAMINA,
+            BotStat.DEFENSE_SKILL_RATING,
+            BotStat.DODGE_RATING,
+            BotStat.PARRY_RATING,
+            BotStat.BLOCK_RATING,
+            BotStat.BLOCK_VALUE
+        ]
+    }
+}
+
+function GetCasterStats() {
+
+}
+
 /**
  * @noSelf
  */
 function GetBotDetails(bot: Creature): BotData {
 
-    const owner = bot.GetBotOwner();
+    const owner = bot.GetBotOwner();    
 
     // We can use bot entrys since they are 1:1 with GUIDs for shorter storage keys
     NpcDetailStorage[bot.GetEntry()] = {
@@ -98,21 +135,44 @@ function GetBotDetails(bot: Creature): BotData {
         class: ClassesMapping[bot.GetBotClass()], 
         classId: bot.GetBotClass(),
         race: RacesMapping[bot.GetRace()],
-        raceId: bot.GetRace(),
-        equipment: {},
-       // stats: {},
+        raceId: bot.GetRace(), 
+        equipment: {} as EquipmentList,  
+        stats: {},
     }; 
 
+    print(bot.GetBotRoles()); 
+
+
+    // Get all the equipment
     for(let slot=0; slot <= BotEquipLast; slot++) {
         const equipment = bot.GetBotEquipment(<BotEquipmentSlotNum>slot);
         
-        if(equipment) {
-            NpcDetailStorage[bot.GetEntry()].equipment[slot] = equipment.GetEntry();
-            print(`Slot: ${BotSlotName[slot]} Item: ${equipment.GetEntry()}`);            
+        if(equipment) {            
+            NpcDetailStorage[bot.GetEntry()].equipment[slot] =  {
+                entry: equipment.GetEntry(),
+                link: equipment.GetItemLink(),
+                quality: <QualityType>equipment.GetQuality(),
+                itemLevel: equipment.GetItemLevel(),
+                enchantmentId: equipment.GetEnchantmentId(0),
+            }                     
         } else {
            NpcDetailStorage[bot.GetEntry()].equipment[slot] = undefined;
         }                
     }
+
+    // get the stats we care about by Class 
+    // This will determine what stats to lookup for the bot.
+    const lookups = GetMeleeStats(); 
+
+
+    lookups.left.forEach(stat => {
+        const result = bot.GetBotStat(stat);
+        NpcDetailStorage[bot.GetEntry()].stats[stat] = result;        
+    });
+    lookups.right.forEach(stat => {
+        const result = bot.GetBotStat(stat);
+        NpcDetailStorage[bot.GetEntry()].stats[stat] = result;        
+    });
     
     return NpcDetailStorage[bot.GetEntry()];    
 }
@@ -124,27 +184,30 @@ function GetBotDetails(bot: Creature): BotData {
  * @param command 
  * @returns 
  */
-function EquipItem(botEntry: number, slot: BotEquipmentSlotNum, item: number): void {
-    
+function EquipTheItem(player: string, botEntry: number, slot: BotEquipmentSlotNum, item: number, link: string ): void {
+    if(botEntry && typeof botEntry !== 'number') {
+        return; 
+    }
 
-    print(`Bot: ${botEntry} Slot: ${slot} Item: ${item}`); 
+    const owner = GetPlayerByName(player);
+    const creatures = owner.GetCreaturesInRange(60, botEntry) as Creature[]; 
+    const bot = creatures[0];
 
-    // const isEligible = bot.BotCanEquipItem(item, slot);
 
+    const isEligible = bot.BotCanEquipItem(item, slot);
+       if(!isEligible) {
+           log.error(`Bot cannot equip item: ${item} in slot: ${slot}`);
+           return; 
+       }
 
-
-    //    if(!isEligible) {
-    //        log.error(`Bot cannot equip item: ${item} in slot: ${slot}`);
-    //        return; 
-    //    }
-
-    //    if(bot.BotEquipItem(item, slot)) {
-    //         NpcDetailStorage[bot.GetEntry()].equipment[slot] = item;
-    //         aio.Handle(bot.GetBotOwner(), 'BotMgr', 'EquipSuccess', { slot, item});
-    //    } else {
-    //         log.error(`Bot failed to equip item: ${item} in slot: ${slot}`);
-    //         aio.Handle(bot.GetBotOwner(), 'BotMgr', 'EquipFail', { slot, item});
-    //      }  
+       if(bot.BotEquipItem(item, slot)) {
+            GetBotDetails(bot);
+            log.log(`Bot successfully equipped item: ${item} in slot: ${slot}`);
+            aio.Handle(bot.GetBotOwner(), 'BotMgr', 'OnEquipSuccess',botEntry, slot, item, link);
+       } else {
+            log.error(`Bot failed to equip item: ${item} in slot: ${slot}`);
+            aio.Handle(bot.GetBotOwner(), 'BotMgr', 'OnEquipFail', botEntry, slot, item, link);
+         }  
                      
 }
 
@@ -201,8 +264,9 @@ function GetBotPanelInfo(player: Player): void  {
 const botMgrHandlers = aio.AddHandlers('BotMgr', {    
     TargetIsEligible,
     GetBotPanelInfo, 
-    EquipItem
+    "EquipTheItem": EquipTheItem
 }); 
+
 
 RegisterPlayerEvent(
     PlayerEvents.PLAYER_EVENT_ON_COMMAND, 

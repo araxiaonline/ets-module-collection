@@ -1,5 +1,10 @@
 import { BotData } from './botmgr.server';
+import { Equipment } from './botmgr.server';
 
+/**
+ * This is the UI bot data manager class to make it easier
+ * to managed bot data in the UI. 
+ */
 export class BotStorage {
 
     private storage: Map<number, BotData> = new Map();
@@ -9,7 +14,7 @@ export class BotStorage {
         return this.storage.get(entry);
     }
 
-    GetBotItem(botId: number, slot: BotEquipmentSlotNum): number | undefined {
+    GetBotItem(botId: number, slot: BotEquipmentSlotNum): Equipment | undefined {
         const bot = this.GetBotData(botId);
         if(bot) {
             return bot.equipment[slot];
@@ -20,7 +25,7 @@ export class BotStorage {
 
     }
 
-    SetBotItem(botId: number, slot: BotEquipmentSlotNum, item: number): void {
+    SetBotItem(botId: number, slot: BotEquipmentSlotNum, item: Equipment): void {
         const bot = this.GetBotData(botId);
         if(bot) {
             bot.equipment[slot] = item;

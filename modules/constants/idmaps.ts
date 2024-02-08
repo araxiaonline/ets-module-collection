@@ -101,7 +101,7 @@ export const BotStat = {
     BOT_STAT_MOD_RESISTANCE_START: 51, // Assuming BOT_STAT_MOD_ARMOR is defined somewhere
   } as const;
   
-  export const BotStatLast = 58;
+export const BotStatLast = 58;
   
 export const UIInvSlot = {
     AMMOSLOT: "AMMOSLOT",
@@ -166,3 +166,157 @@ export const RacesMapping: Record<number, string> = {
 } as const;
 
 export type CharacterRace = typeof RacesMapping[keyof typeof RacesMapping];
+
+export const BotTalentSpecs = {
+  WARRIOR_ARMS         : 1,
+  WARRIOR_FURY         : 2,
+  WARRIOR_PROTECTION   : 3,
+  PALADIN_HOLY         : 4,
+  PALADIN_PROTECTION   : 5,
+  PALADIN_RETRIBUTION  : 6,
+  HUNTER_BEASTMASTERY  : 7,
+  HUNTER_MARKSMANSHIP  : 8,
+  HUNTER_SURVIVAL      : 9,
+  ROGUE_ASSASSINATION  : 10,
+  ROGUE_COMBAT         : 11,
+  ROGUE_SUBTLETY       : 12,
+  PRIEST_DISCIPLINE    : 13,
+  PRIEST_HOLY          : 14,
+  PRIEST_SHADOW        : 15,
+  DK_BLOOD             : 16,
+  DK_FROST             : 17,
+  DK_UNHOLY            : 18,
+  SHAMAN_ELEMENTAL     : 19,
+  SHAMAN_ENHANCEMENT   : 20,
+  SHAMAN_RESTORATION   : 21,
+  MAGE_ARCANE          : 22,
+  MAGE_FIRE            : 23,
+  MAGE_FROST           : 24,
+  WARLOCK_AFFLICTION   : 25,
+  WARLOCK_DEMONOLOGY   : 26,
+  WARLOCK_DESTRUCTION  : 27,
+  DRUID_BALANCE        : 28,
+  DRUID_FERAL          : 29,
+  DRUID_RESTORATION    : 30,
+  DEFAULT              : 31,
+  BEGIN                : 1,  
+  END                  : 31 
+} as const;
+
+export function talentSpecName(id: number) {
+  return Object.keys(BotTalentSpecs).find(key => BotTalentSpecs[key] === id);
+}
+
+export const BotRoles = {
+  NONE                   : 0,
+  TANK                   : 1,
+  TANK_OFF               : 2,
+  DPS                    : 4,
+  HEAL                   : 8,
+  RANGED                 : 16,
+  PARTY                  : 32, // hidden
+  GATHERING_MINING       : 64,
+  GATHERING_HERBALISM    : 128,
+  GATHERING_SKINNING     : 256,
+  GATHERING_ENGINEERING  : 512,
+  AUTOLOOT               : 1024,
+  AUTOLOOT_POOR          : 2048,
+  AUTOLOOT_COMMON        : 4096,
+  AUTOLOOT_UNCOMMON      : 8192,
+  AUTOLOOT_RARE          : 16384,
+  AUTOLOOT_EPIC          : 32768,
+  AUTOLOOT_LEGENDARY     : 65536,  
+  MASK_MAIN              : (1 | 2 | 4 | 8 | 16),  
+  MASK_GATHERING         : (64 | 128 | 256 | 512),
+  MASK_LOOTING           : (2048 | 4096 | 8192 | 16384 | 32768 | 65536),  
+  BOT_MAX_ROLE                    : 131072,
+} as const;
+
+
+/**************** ITEM CONSTANTS *************************/
+
+export const ItemQuality = {
+  Poor:       0,
+  Common:     1,
+  Uncommon:   2,
+  Rare:       3,
+  Epic:       4,
+  Legendary:  5,
+  Artifact:   6,
+  Heirlooms:  7,
+} as const;
+
+export const ItemStat = {
+  MANA:                      0,
+  HEALTH:                    1,
+  AGILITY:                   3,
+  STRENGTH:                  4,
+  INTELLECT:                 5,
+  SPIRIT:                    6,
+  STAMINA:                   7,
+  DEFENSE_SKILL_RATING:     12,
+  DODGE_RATING:             13,
+  PARRY_RATING:             14,
+  BLOCK_RATING:             15,
+  HIT_MELEE_RATING:         16,
+  HIT_RANGED_RATING:        17,
+  HIT_SPELL_RATING:         18,
+  CRIT_MELEE_RATING:        19,
+  CRIT_RANGED_RATING:       20,
+  CRIT_SPELL_RATING:        21,
+  HIT_TAKEN_MELEE_RATING:   22,
+  HIT_TAKEN_RANGED_RATING:  23,
+  HIT_TAKEN_SPELL_RATING:   24,
+  CRIT_TAKEN_MELEE_RATING:  25,
+  CRIT_TAKEN_RANGED_RATING: 26,
+  CRIT_TAKEN_SPELL_RATING:  27,
+  HASTE_MELEE_RATING:       28,
+  HASTE_RANGED_RATING:      29,
+  HASTE_SPELL_RATING:       30,
+  HIT_RATING:               31,
+  CRIT_RATING:              32,
+  HIT_TAKEN_RATING:         33,
+  CRIT_TAKEN_RATING:        34,
+  RESILIENCE_RATING:        35,
+  HASTE_RATING:             36,
+  EXPERTISE_RATING:         37,
+  ATTACK_POWER:             38,
+  RANGED_ATTACK_POWER:      39,
+  FERAL_ATTACK_POWER:       40, // Note: This is not used as of 3.3
+  SPELL_HEALING_DONE:       41,
+  SPELL_DAMAGE_DONE:        42,
+  MANA_REGENERATION:        43,
+  ARMOR_PENETRATION_RATING: 44,
+  SPELL_POWER:              45,
+  HEALTH_REGEN:             46,
+  SPELL_PENETRATION:        47,
+  BLOCK_VALUE:              48,
+} as const;
+
+export const DamageType = {
+  Physical:  0,
+  Holy:      1,
+  Fire:      2,
+  Nature:    3,
+  Frost:     4,
+  Shadow:    5,
+  Arcane:    6,
+} as const;
+
+export const SocketColor = {
+  Meta:   1,
+  Red:    2,
+  Yellow: 4,
+  Blue:   8,
+} as const;
+
+export const SocketBonus = {
+  3312: '+8 Strength',
+  3313: '+8 Agility',
+  3305: '+12 Stamina',
+  3:    '+8 Intellect',
+  2872: '+9 Healing',
+  3753: '+9 Spell Power',
+  3877: '+16 Attack Power',
+} as const;
+

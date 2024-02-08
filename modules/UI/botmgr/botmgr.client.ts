@@ -19,12 +19,11 @@ let aio: AIO = {};
  */
 
 
-import { UIInvSlot, BotEquipSlot, BotSlotName } from "../../constants/idmaps";
-import { BotData } from "./botmgr.server";
+import { UIInvSlot, BotEquipSlot, BotSlotName, BotStat } from "../../constants/idmaps";
+import { BotData, Equipment } from "./botmgr.server";
 import { BotStorage } from "./bot";
 
-
-
+// Helper functions to create unique ids for frames and components
 const id = (name: string, entry: number = null) => `BotMgr${name}` + (entry ? entry : '');
 const compId = (botId: number, name: string) => `${botId}:BotMgr${name}`;
 
@@ -42,7 +41,6 @@ function ucase(input: string): string {
     return firstLetter + restOfTheString;
 }
 
-
 // If we are a client file. aio.AddAddon() will return false and this file will be serialized and sent to client. 
 if(!aio.AddAddon()) {
     
@@ -50,7 +48,6 @@ if(!aio.AddAddon()) {
     const InfoFramePool: Map<number, WoWAPI.Frame> = new Map();  
     const ComponentsPool: Map<string, unknown> = new Map();   // key botId + ":" + componentid
     const botStorage: BotStorage = new BotStorage();
-    
 
     let BotItemTooltip: WoWAPI.GameTooltip;  
 
@@ -64,7 +61,6 @@ if(!aio.AddAddon()) {
         const resistFrame = CreateFrame("Frame", id("ResistsFrame"), parent);
         resistFrame.SetSize(32, 160); 
         resistFrame.SetPoint("TOPRIGHT", parent, "TOPLEFT", 297, -77); 
-
 
         const magicRes1 = CreateFrame("Frame", id("MagicResFrame1"), resistFrame, "MagicResistanceFrameTemplate", 6);
         magicRes1.SetPoint("TOP", resistFrame, "TOP", 0, 0);
@@ -82,7 +78,7 @@ if(!aio.AddAddon()) {
 
     /**
      * This is for the Characters left picture and class,race, name details. 
-     * Only created once. 
+     * Only created once per bot panel. 
      */
     function AddPortrait(parent: WoWAPI.Frame, botData: BotData) {
         const portrait = parent.CreateTexture(id("Portrait", botData.entry), "ARTWORK");
@@ -122,14 +118,16 @@ if(!aio.AddAddon()) {
         infoTextFont.SetPoint("CENTER",0,0);    
         
     }
-
+    
     function AddCharacterModel(parent: WoWAPI.Frame, botData: BotData) {        
         const frameChar = CreateFrame("PlayerModel", id("ModelFrame", botData.entry), parent, null, botData.entry);
         frameChar.SetPoint("TOP", -5, -82);
-        frameChar.SetSize(240, 160);
+        frameChar.SetSize(240, 175);
         frameChar.SetUnit("target"); 
-        frameChar.SetFacing(0.3);
-        frameChar.SetFrameStrata("MEDIUM");
+        frameChar.SetFacing(0.3);        
+        frameChar.SetAlpha(0.65);
+        frameChar.SetGlow(0.9);
+        frameChar.SetFrameStrata("MEDIUM");        
     }
 
     function UpdateEquipFrame(group: 'left' | 'right' | 'weapons', parent: WoWAPI.Frame, botData: BotData) {
@@ -156,12 +154,13 @@ if(!aio.AddAddon()) {
                 equipSlot.SetPoint("TOPLEFT", i*40+1, 0);
             else 
                 equipSlot.SetPoint("TOPLEFT", 0, -i*40-1);
+
             equipSlot.SetSize(40, 40);    
             equipSlot.SetScript("OnEnter", ItemSlotOnEnter);
             equipSlot.SetScript("OnLeave", ItemSlotOnLeave);
             equipSlot.SetScript("OnClick", ItemSlotOnClick); 
 
-            const equippedItemId = botData.equipment[slotOrder[i]];
+            const equippedItem: Equipment = botData.equipment[slotOrder[i]];
             let itemIcon: WoWAPI.TexturePath; 
             let itemId: number;
             let idsuffix: string | number;
@@ -174,13 +173,13 @@ if(!aio.AddAddon()) {
             }
             
             // If we have a piece of equipment add the icon template
-            if(equippedItemId && equippedItemId > 0) {
-                itemIcon = GetItemIcon(equippedItemId);                    
+            if(equippedItem && equippedItem.entry > 0) {
+                itemIcon = GetItemIcon(equippedItem.entry);                    
                 idsuffix = slotOrder[i];             
             }
 
             // If there is not a piece of equipment add the background texture
-            if(!equippedItemId && slotOrder[i] > 0) {
+            if(!equippedItem && slotOrder[i] > 0) {
                 let slotName = BotSlotName[slotOrder[i]];
 
                 if(slotOrder[i] === BotEquipSlot.FINGER1) slotName = "FINGER0";
@@ -196,10 +195,10 @@ if(!aio.AddAddon()) {
             const itemTexture = equipSlot.CreateTexture(id(`ItemTexture-${idsuffix}`), "OVERLAY");
             itemTexture.SetTexture(itemIcon);
             itemTexture.SetPoint("CENTER", 0, 0);
-            itemTexture.SetSize(36,36);                                        
+            itemTexture.SetSize(36,36);
+            ComponentsPool.set(compId(botData.entry, `ItemSlotTexture-${itemSlotId}`), itemTexture);
         }
     }
-
 
     function AddEquipmentFrames(parent: WoWAPI.Frame, botData: BotData) {
         
@@ -215,7 +214,7 @@ if(!aio.AddAddon()) {
             equipFrame = CreateFrame("Frame", id("LeftEquipment"), parent, null, 1);
             equipFrame.SetPoint("TOPLEFT", 20, -73);
             equipFrame.SetSize(40, 330);
-            UpdateEquipFrame('left', equipFrame, botData);
+           UpdateEquipFrame('left', equipFrame, botData);
             ComponentsPool.set(compId(botData.entry, "LeftEquipment"), equipFrame);    
 
         }
@@ -225,7 +224,7 @@ if(!aio.AddAddon()) {
             equipFrame.SetPoint("TOPRIGHT", -40, -73);
             equipFrame.SetSize(40, 330);
             ComponentsPool.set(compId(botData.entry, "RightEquipment"), equipFrame);    
-            UpdateEquipFrame('right', equipFrame, botData);
+           UpdateEquipFrame('right', equipFrame, botData);
             
         }
 
@@ -239,8 +238,68 @@ if(!aio.AddAddon()) {
             // placeholder.SetAllPoints(equipFrame); 
             // placeholder.SetTexture(0,0,0,0.8); 
         }
+                
+    }
+
+    function CreateStats(parent: WoWAPI.Frame, botData: BotData) {
         
+        const reverseObject = (obj: { [key: string]: any }): { [key: string]: string } =>
+  Object.fromEntries(Object.entries(obj).map(([k, v]) => [v, k]));
+        const lookup = reverseObject(BotStat);
         
+
+
+        const statsFrame = CreateFrame("Frame", id("CharacterAttr"), parent, null, 1);
+        statsFrame.SetSize(230,78); 
+        statsFrame.SetPoint("TOPLEFT", 67, -231);
+        statsFrame.SetFrameStrata("HIGH");
+        statsFrame.SetAlpha(1.0);    
+        statsFrame.SetBackdropColor(0,0,0,1.0);    
+
+        const leftTop = statsFrame.CreateTexture(id("StatLeftTop"), "BACKGROUND");
+        leftTop.SetTexture("Interface\\PaperDollInfoFrame\\UI-Character-StatBackground");
+        leftTop.SetSize(115,16);
+        leftTop.SetPoint("TOPLEFT", 0, 0);
+        leftTop.SetTexCoord(0, 0.8984375, 0, 0.125); 
+
+        const leftmiddle = statsFrame.CreateTexture(id("StatLeftMiddle"), "BACKGROUND");
+        leftmiddle.SetTexture("Interface\\PaperDollInfoFrame\\UI-Character-StatBackground");
+        leftmiddle.SetSize(115,113);
+        leftmiddle.SetPoint("TOPLEFT", leftTop, "BOTTOMLEFT", 0, 0);
+        leftmiddle.SetTexCoord(0, 0.8984375, 0.125, 0.1953125);
+
+        const leftBottom = statsFrame.CreateTexture(id("StatLeftBottom"), "BACKGROUND");
+        leftBottom.SetTexture("Interface\\PaperDollInfoFrame\\UI-Character-StatBackground");
+        leftBottom.SetSize(115,16);
+        leftBottom.SetPoint("TOPLEFT", leftmiddle, "BOTTOMLEFT", 0, 0);
+        leftBottom.SetTexCoord(0, 0.8984375, 0.484375, 0.609375);
+
+        const rightTop = statsFrame.CreateTexture(id("StatRightTop"), "BACKGROUND");
+        rightTop.SetTexture("Interface\\PaperDollInfoFrame\\UI-Character-StatBackground");
+        rightTop.SetSize(115,16);
+        rightTop.SetPoint("TOPLEFT", leftTop, "TOPRIGHT",0, 0);
+        rightTop.SetTexCoord(0, 0.8984375, 0, 0.125);
+
+        const rightMiddle = statsFrame.CreateTexture(id("StatRightMiddle"), "BACKGROUND");
+        rightMiddle.SetTexture("Interface\\PaperDollInfoFrame\\UI-Character-StatBackground");
+        rightMiddle.SetSize(115,113);
+        rightMiddle.SetPoint("TOPLEFT", leftmiddle, "TOPRIGHT", 0, 0);
+        rightMiddle.SetTexCoord(0, 0.8984375, 0.125, 0.1953125);
+
+        const rightBottom = statsFrame.CreateTexture(id("StatRightBottom"), "BACKGROUND");
+        rightBottom.SetTexture("Interface\\PaperDollInfoFrame\\UI-Character-StatBackground");
+        rightBottom.SetSize(115,16);
+        rightBottom.SetPoint("TOPLEFT", leftBottom, "TOPRIGHT", 0, 0);
+        rightBottom.SetTexCoord(0, 0.8984375, 0.484375, 0.609375);
+
+        let counter = 0; 
+        // for(const stats in botData.stats.left) {
+        //     const stat = statsFrame.CreateFontString(id(`Stat-${stats}`), "ARTWORK", "GameFontNormalSmall");
+        //     stat.SetPoint("TOPLEFT", statsFrame, "TOPLEFT", 10, -10 - (counter * 14));
+        //     stat.SetText(lookup[stats] + " " + botData.stats[stats]);
+        //     counter++;
+        // }
+
     }
 
     function SetBackground(parent: WoWAPI.Frame) {        
@@ -286,12 +345,16 @@ if(!aio.AddAddon()) {
         });  
     }
 
+    /**
+     * START OF EVENT HANDLERS 
+     */
+
     function ItemSlotOnEnter(frame: WoWAPI.Button) {
         const botId = botStorage.GetActive();        
-        const itemId = botStorage.GetBotItem(botId, <BotEquipmentSlotNum>frame.GetID());        
+        const theItem = botStorage.GetBotItem(botId, <BotEquipmentSlotNum>frame.GetID());        
         GameTooltip.SetOwner(frame, "ANCHOR_RIGHT");                 
-        if(itemId) {
-            GameTooltip.SetHyperlink(`item:${itemId}:0:0:0:0:0:0:0`);
+        if(theItem) {
+            GameTooltip.SetHyperlink(theItem.link);
         } else {            
             if(frame.GetID() == 90) {
                 GameTooltip.SetText("Tabard");
@@ -325,14 +388,14 @@ if(!aio.AddAddon()) {
 
     function ItemSlotOnClick(frame: WoWAPI.Button, button: string) {
         const botId = botStorage.GetActive();        
-        const itemId = botStorage.GetBotItem(botId, <BotEquipmentSlotNum>frame.GetID());    
+        const theItem = botStorage.GetBotItem(botId, <BotEquipmentSlotNum>frame.GetID());    
 
         const [compItem, compItemId, compItemLink] = GetCursorInfo();
         print(`CursorHasItem: ${compItemLink}`);
 
-        if(itemId && !compItem) {
+        if(theItem && !compItem) {
             if(button == "LeftButton") {
-                PickupItem(itemId);
+                PickupItem(theItem.link);
                 return; 
             }             
         } 
@@ -340,20 +403,28 @@ if(!aio.AddAddon()) {
         if(compItem) {
             const slot = frame.GetID(); 
             
-            aio.Handle("BotMgr", "EquipItem",botId, slot, compItemId); 
+            aio.Handle("BotMgr", "EquipTheItem", GetUnitName("player", false), botId, slot, compItemId, compItemLink); 
             // Attempt to equip the item. 
             PlaySound("INTERFACESOUND_CURSORDROPOBJECT");
             ClearCursor(); 
         }
-        
-        
-        // else {
-        //     if(CursorHasItem()) {
-        //         const [compItem, compItemId, compItemLink] = GetCursorInfo();                    
-        //         botStorage.EquipBotItem(botId, <BotEquipmentSlotNum>frame.GetID(), compItemId);
-        //     }
-        // }
     }
+
+    botMgrHandlers.OnEquipSuccess = (botId: number, slot: BotEquipmentSlotNum, itemId: number, itemLink: string) => {        
+        const itemTexture = <WoWAPI.Texture>ComponentsPool.get(compId(botId, `ItemSlotTexture-${slot}`));
+        itemTexture.SetTexture(GetItemIcon(itemId));
+        
+        // Hide Tooltips otherwise it will show old item. 
+        const BotTooltip = <WoWAPI.GameTooltip>ComponentsPool.get(compId(botId, "tooltip"));          
+        BotTooltip.Hide();
+        GameTooltip.Hide();     
+    }
+
+    botMgrHandlers.OnEquipFail = (botId: number, slot: BotEquipmentSlotNum, itemId: number, itemLink: string) => {
+        PlaySound("ITEMGENERICSOUND");
+        ClearCursor();
+    }
+
 
     /**
      * Shows or Creates a new Bot Equipment Management Frame
@@ -394,7 +465,23 @@ if(!aio.AddAddon()) {
             mainFrame.SetScript("OnLeave", (frame) => {
                 frame.SetFrameLevel(5);
             });
+
+            mainFrame.RegisterEvent("CURSOR_UPDATE");
+            mainFrame.RegisterEvent("ITEM_LOCK_CHANGED");
+            mainFrame.RegisterEvent("ITEM_UNLOCKED");
+
+            mainFrame.SetScript("OnEvent", (frame: WoWAPI.Frame, eventName: WoWAPI.Event, ...args) => {
+                if(eventName == "ITEM_LOCKED") {
+                    GetCursorInfo()
+                    print(args); 
+                    for(const arg of args) {
+                        print(arg); 
+                    }
+                }                
+            }); 
             
+            
+
             // mainFrame.Hide(); 
             
             BotItemTooltip = CreateFrame("GameTooltip", id("ItemToolTip"+botData.entry), mainFrame, "GameTooltipTemplate", botData.entry);  
@@ -407,7 +494,9 @@ if(!aio.AddAddon()) {
             AddCharacterModel(mainFrame, botData);
             AddResistFrame(mainFrame);                    
             AddEquipmentFrames(mainFrame, botData);
+            CreateStats(mainFrame, botData);
             AddSoundEffects(mainFrame);
+
 
             InfoFramePool.set(botData.entry, mainFrame); 
             ComponentsPool.set(compId(botData.entry, "tooltip"), <WoWAPI.GameTooltip>BotItemTooltip); 
@@ -501,11 +590,11 @@ if(!aio.AddAddon()) {
          
     }
 
-    botMgrHandlers.ShowFrame = (botData: BotData) => {              
-        
-        // Update the botData manager for this Bot on panel show. 
+    
+    botMgrHandlers.ShowFrame = (botData: BotData) =>{
         botStorage.UpdateBotData(botData.entry, botData);
-        ShowBotFrame(botData);     
-    }   
+        ShowBotFrame(botData);  
+    }
+
 }
 
