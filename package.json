@@ -19,6 +19,6 @@
     "@types/node": "^20.11.15",    
     "fs-extra": "^11.2.0",
     "ts-node": "^10.9.1",
-    "wow-eluna-ts-module": "^1.9.2"
+    "wow-eluna-ts-module": "^1.9.3"
   }
 }
