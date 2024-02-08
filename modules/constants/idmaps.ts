@@ -246,6 +246,9 @@ export const ItemQuality = {
   Heirlooms:  7,
 } as const;
 
+export type QualityType = typeof ItemQuality[keyof typeof ItemQuality];
+
+
 export const ItemStat = {
   MANA:                      0,
   HEALTH:                    1,
