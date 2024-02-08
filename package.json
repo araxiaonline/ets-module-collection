@@ -16,10 +16,9 @@
   },
   "dependencies": {
     "@types/fs-extra": "^11.0.4",
-    "@types/node": "^20.11.15",
-    "D": "^1.0.0",
+    "@types/node": "^20.11.15",    
     "fs-extra": "^11.2.0",
     "ts-node": "^10.9.1",
-    "wow-eluna-ts-module": "^1.8.0"
+    "wow-eluna-ts-module": "^1.9.2"
   }
 }
