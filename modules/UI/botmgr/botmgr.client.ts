@@ -4,17 +4,8 @@
 let aio: AIO = {}; 
 
 /**
- * @todo Add all equipment slots for the bot onload - done
- * @todo Create frames for bot status 
- * @todo Complete resist information frame. 
- * @todo Update server message to send class name, bot race - done
- * @todo Add hover events to handle equipment change on bot. 
- * @todo Add compare tooltip for bot equipment - sort of done (shows equipment next to each other)
- * 
  * v2: 
- * @todo Add slot management for bot equipment
- * @todo Add bot spec under bot info
- * @todo Add talent spec to bot profile
+ * @todo Add slot management for bot equipment 
  */
 
 
@@ -115,7 +106,7 @@ if(!aio.AddAddon()) {
         magResBack3.SetTexture("Interface\\PaperDollInfoFrame\\UI-Character-ResistanceIcons");
         magResBack3.SetTexCoord(0, 1, 0.11328125, 0.2265625);
         magResBack3.SetAllPoints(magicRes3);
-    3
+    
         const magResFont3 = magicRes3.CreateFontString(id("Resist3"), "BACKGROUND", "GameFontHighlightSmall");
         magResFont3.SetPoint("BOTTOM", magicRes3, null, 0, 3);
         magResFont3.SetText(`${GREEN_FONT_COLOR_CODE}${botData.allStats["Resistance: nature"]}`);
@@ -131,7 +122,7 @@ if(!aio.AddAddon()) {
         magResBack4.SetTexture("Interface\\PaperDollInfoFrame\\UI-Character-ResistanceIcons");
         magResBack4.SetTexCoord(0, 1, 0.33984375, 0.453125);
         magResBack4.SetAllPoints(magicRes4);
-    3
+    
         const magResFont4 = magicRes4.CreateFontString(id("Resist4"), "BACKGROUND", "GameFontHighlightSmall");
         magResFont4.SetPoint("BOTTOM", magicRes4, null, 0, 3);
         magResFont4.SetText(`${GREEN_FONT_COLOR_CODE}${botData.allStats["Resistance: frost"]}`);
@@ -147,7 +138,7 @@ if(!aio.AddAddon()) {
         magResBack5.SetTexture("Interface\\PaperDollInfoFrame\\UI-Character-ResistanceIcons");
         magResBack5.SetTexCoord(0, 1, 0.453125, 0.56640625);
         magResBack5.SetAllPoints(magicRes5);
-    3
+    
         const magResFont5 = magicRes5.CreateFontString(id("Resist5"), "BACKGROUND", "GameFontHighlightSmall");
         magResFont5.SetPoint("BOTTOM", magicRes5, null, 0, 3);
         magResFont5.SetText(`${GREEN_FONT_COLOR_CODE}${botData.allStats["Resistance: shadow"]}`);
@@ -313,43 +304,59 @@ if(!aio.AddAddon()) {
             equipFrame.SetPoint("CENTER", -10, -147);
             equipFrame.SetSize(129, 40);
             UpdateEquipFrame('weapons', equipFrame, botData);
-            ComponentsPool.set(compId(botData.entry, "WeaponsEquipment"), equipFrame);
-            
+            ComponentsPool.set(compId(botData.entry, "WeaponsEquipment"), equipFrame);            
         }
                 
     }
 
-    function AddStats(parent: WoWAPI.Frame, botData: BotData) {
+    function AddStats(parent: WoWAPI.Frame | undefined, botData: BotData) {
         const leftStats = botData.leftStats;
         const rightStats = botData.rightStats;
         for(let i =0; i < leftStats.length; i++) {
             const statName = Object.keys(leftStats[i])[0];
-            const statLabel = parent.CreateFontString(id(`StatName-${statName}`), "ARTWORK", "GameFontNormalSmall");
-            statLabel.SetPoint("TOPLEFT", parent, "TOPLEFT", 5, -7 - (i * 14));            
-            statLabel.SetText(`${statName}:`);
-            statLabel.SetJustifyH("LEFT");
 
-            const statValue = parent.CreateFontString(id(`StatValue-${statName}`), "ARTWORK", "GameFontNormalSmall");
-            statValue.SetPoint("TOPRIGHT", parent, "TOP", -4, -5 - (i * 14));
-            statValue.SetSize(50, 14); 
-            statValue.SetText(`${colors('white')}${leftStats[i][statName]}`);
-            statValue.SetJustifyH("RIGHT");        
+            let statLabel = <WoWAPI.FontString>ComponentsPool.get(compId(botData.entry, `StatName-${statName}`));            
+            if(!statLabel) {
+                statLabel = parent.CreateFontString(id(`StatName-${statName}`), "ARTWORK", "GameFontNormalSmall");
+                statLabel.SetPoint("TOPLEFT", parent, "TOPLEFT", 5, -7 - (i * 14));                        
+                statLabel.SetJustifyH("LEFT");
+                statLabel.SetText(`${statName}:`);            
+                ComponentsPool.set(compId(botData.entry, `StatName-${statName}`), statLabel); 
+            }
             
+            let statValue = <WoWAPI.FontString>ComponentsPool.get(compId(botData.entry, `StatValue-${statName}`));
+            // if there is not an existing component create a new one
+            if(!statValue) {
+                statValue = parent.CreateFontString(id(`StatValue-${statName}`), "ARTWORK", "GameFontNormalSmall");
+                statValue.SetPoint("TOPRIGHT", parent, "TOP", -4, -5 - (i * 14));
+                statValue.SetSize(50, 14);             
+                statValue.SetJustifyH("RIGHT");        
+                ComponentsPool.set(compId(botData.entry, `StatValue-${statName}`), statValue); 
+            }
+            statValue.SetText(`${colors('white')}${leftStats[i][statName]}`);            
         }
 
         for(let i =0; i < rightStats.length; i++) {
             const statName = Object.keys(rightStats[i])[0];
-            const statLabel = parent.CreateFontString(id(`StatName-${statName}`), "ARTWORK", "GameFontNormalSmall");
-            statLabel.SetPoint("TOPLEFT", parent, "TOPLEFT", 118, -7 - (i * 14));            
-            statLabel.SetText(`${statName}:`);
-            statLabel.SetJustifyH("LEFT");
+            let statLabel = <WoWAPI.FontString>ComponentsPool.get(compId(botData.entry, `StatName-${statName}`));
+            if(!statLabel) {
+                statLabel = parent.CreateFontString(id(`StatName-${statName}`), "ARTWORK", "GameFontNormalSmall");
+                statLabel.SetPoint("TOPLEFT", parent, "TOPLEFT", 118, -7 - (i * 14));            
+                statLabel.SetText(`${statName}:`);
+                statLabel.SetJustifyH("LEFT");
+                ComponentsPool.set(compId(botData.entry, `StatName-${statName}`), statLabel); 
+            }            
 
-            const statValue = parent.CreateFontString(id(`StatValue-${statName}`), "ARTWORK", "GameFontNormalSmall");
-            statValue.SetPoint("TOPRIGHT", parent, "TOPRIGHT", -4, -5 - (i * 14));
-            statValue.SetSize(50, 14); 
+            let statValue = <WoWAPI.FontString>ComponentsPool.get(compId(botData.entry, `StatValue-${statName}`));
+            if(!statValue) {
+                statValue = parent.CreateFontString(id(`StatValue-${statName}`), "ARTWORK", "GameFontNormalSmall");
+                statValue.SetPoint("TOPRIGHT", parent, "TOPRIGHT", -4, -5 - (i * 14));
+                statValue.SetSize(50, 14); 
+                statValue.SetJustifyH("RIGHT");            
+                ComponentsPool.set(compId(botData.entry, `StatValue-${statName}`), statValue); 
+            }
             statValue.SetText(`${colors('white')}${rightStats[i][statName]}`);
-            statValue.SetJustifyH("RIGHT");        
-            
+                        
         }
     }
 
@@ -358,7 +365,8 @@ if(!aio.AddAddon()) {
         const statsFrame = CreateFrame("Frame", id("CharacterAttr"), parent, null, 1);
         statsFrame.SetSize(230,78); 
         statsFrame.SetPoint("TOPLEFT", 67, -251);
-        statsFrame.SetFrameStrata("HIGH");
+        statsFrame.SetFrameLevel(parent.GetFrameLevel() + 1);
+        // statsFrame.SetFrameStrata("LOW");
         statsFrame.SetAlpha(1.0);    
         statsFrame.SetBackdropColor(0,0,0,1.0);    
 
@@ -487,16 +495,36 @@ if(!aio.AddAddon()) {
 
     function ItemSlotOnClick(frame: WoWAPI.Button, button: string) {
         const botId = botStorage.GetActive();        
-
-        print(botId); 
+                
         const theItem = botStorage.GetBotItem(botId, <BotEquipmentSlotNum>frame.GetID());    
-
         const [compItem, compItemId, compItemLink] = GetCursorInfo();        
 
+        // IF we have a bank item since it is not our inventory it will crash the server so store it then send equip
+        const bankItem = botStorage.GetFromBank();
+        if(bankItem) {
+            for(let i=0; i <= 4; i++) {
+                if(GetContainerNumFreeSlots(<WoWAPI.CONTAINER_ID>i)) {
+                    if(i === 0) {
+                        PutItemInBackpack();                         
+                    } else {
+                        PutItemInBag(i);
+                    }
+                }
+            }
+        }
+
+        // Special case to handle unquipping items via modified click
+        if(IsModifiedClick("AUTOLOOTTOGGLE")) {
+            if(theItem && !compItem) {
+                aio.Handle("BotMgr", "UnequipTheItem", GetUnitName("player", false), frame.GetID(), botId);
+                return; 
+            }
+        }
+        
         if(theItem && !compItem) {
             if(button == "LeftButton") {
                 PickupItem(theItem.link);
-                print('Set Bot Pickup Item', botId, theItem.entry, theItem.link); 
+                // print('Set Bot Pickup Item', botId, theItem.entry, theItem.link); 
                 botStorage.BotItemPickedUp(botId, theItem.entry, theItem.link);
                 return; 
             }             
@@ -530,10 +558,10 @@ if(!aio.AddAddon()) {
         botStorage.SetBotItem(botId, slot, item); 
             
         BotTooltip.Hide();
-        GameTooltip.Hide();     
+        GameTooltip.Hide();             
     }
 
-    botMgrHandlers.OnUnEquipSuccess = (slot: BotEquipmentSlotNum, botId: number) => {                
+    botMgrHandlers.OnUnEquipSuccess = (botId: number, slot: BotEquipmentSlotNum) => {                
         const itemTexture = <WoWAPI.Texture>ComponentsPool.get(compId(botId, `ItemSlotTexture-${slot}`));
         /** TO DO move to generic function for getting textures right now is copy/paste */
         let slotName: string = BotSlotName[slot];
@@ -550,7 +578,7 @@ if(!aio.AddAddon()) {
         // Hide Tooltips otherwise it will show old item. 
         const BotTooltip = <WoWAPI.GameTooltip>ComponentsPool.get(compId(botId, "tooltip"));          
         BotTooltip.Hide();
-        GameTooltip.Hide();     
+        GameTooltip.Hide();                             
     }
 
     botMgrHandlers.OnEquipFail = (botId: number, slot: BotEquipmentSlotNum, itemId: number, itemLink: string) => {
@@ -566,11 +594,15 @@ if(!aio.AddAddon()) {
         ClearCursor();
     }
 
+    botMgrHandlers.UpdateBotData = (data: BotData) => {             
+        botStorage.SetBotData(data.entry, data);
+        UpdateBotFrame(data);
+    }
+
     function HandleUnequipItem(itemButton: WoWAPI.Button, isBankSlot: boolean = false): void {
 
         const slotNum = itemButton.GetID();
         const bagId = itemButton.GetParent().GetID();    
-        print(`Is Item Picked Up: ${botStorage.IsPickedUp()}`);     
         if(!GetContainerItemLink((isBankSlot) ? -1 : bagId, slotNum)) {
             if(botStorage.IsPickedUp()) {
                 const item = botStorage.GetItemInHand();                
@@ -585,54 +617,50 @@ if(!aio.AddAddon()) {
      */
     function StoreItemSlotHandlers(): void {
 
-        // Intercept Bags Item Slots Click Event
-        for(let container = 1; container <= 13; container++) {
-            for(let slot = 1; slot <= 36; slot++) {
-                ItemClickFuncs.set(`${container}:${slot}`, _G[`ContainerFrame${container}Item${slot}`].GetScript("OnClick"));
-                                
-                _G[`ContainerFrame${container}Item${slot}`].SetScript("OnClick", (frame: WoWAPI.Button, ...args) => { 
-                                        
-                    const bagId = frame.GetParent().GetID();
-                    const slotNum = frame.GetID();                    
-                    HandleUnequipItem(frame);     
-                    print(`Unequipped - BagId: ${bagId} Slot: ${slotNum}`);                                    
-                    const callback = ItemClickFuncs.get(`${bagId}:${slotNum}`);
-                    (callback) ? callback(frame, ...args) : print(`No callback for ${bagId}:${slotNum}`);                     
-
-                }); 
-            }
-        }
-
         // Intercept Bank Item Slots Click Event
         for(let bankSlot = 1; bankSlot <= _G[`NUM_BANKGENERIC_SLOTS`]; bankSlot++) {
             ItemClickFuncs.set(`bank:${bankSlot}`, _G[`BankFrameItem${bankSlot}`].GetScript("OnClick"));
             
-            _G[`BankFrameItem${bankSlot}`].SetScript("OnClick", (frame: WoWAPI.Button, ...args) => {              
-                
+            _G[`BankFrameItem${bankSlot}`].SetScript("OnClick", (frame: WoWAPI.Button, ...args) => {                                                          
+
                 HandleUnequipItem(frame, true);
                 const callback = ItemClickFuncs.get(`bank:${frame.GetID()}`);
-                (callback) ? callback(frame, ...args) : print(`No callback for bank:${bankSlot}`)
+                (callback) ? callback(frame, ...args)  : null;
+                 //print(`No callback for bank:${bankSlot}`)
+
+                if(CursorHasItem()) {
+                    const [compItem, compItemId, compItemLink] = GetCursorInfo();                        
+                    botStorage.SetFromBank({
+                        slot: frame.GetID(),
+                        link: compItemLink,
+                        entry: compItemId
+                    });
+                }
             }); 
         }
                             
     }
     
     function UpdateBotFrame(botData: BotData) {
+        
         // Set the new Talent Spec 
         const talentSpec = <WoWAPI.FontString>ComponentsPool.get(compId(botData.entry, "SpecFont"));
         talentSpec.SetText(botData.talentSpecName);
 
         // Update Resist Frames
         let resist = <WoWAPI.FontString>ComponentsPool.get(compId(botData.entry, "Resist1")); 
-        // resist.SetText(botData.allStats['Resistance: arcane']);
+        resist.SetText(`${GREEN_FONT_COLOR_CODE}${botData.allStats['Resistance: arcane']}`);
         resist = <WoWAPI.FontString>ComponentsPool.get(compId(botData.entry, "Resist2")); 
-        // resist.SetText(botData.allStats['Resistance: fire']);
+        resist.SetText(`${GREEN_FONT_COLOR_CODE}${botData.allStats['Resistance: fire']}`);
         resist = <WoWAPI.FontString>ComponentsPool.get(compId(botData.entry, "Resist3")); 
-        // resist.SetText(botData.allStats['Resistance: nature']);
+        resist.SetText(`${GREEN_FONT_COLOR_CODE}${botData.allStats['Resistance: nature']}`);
         resist = <WoWAPI.FontString>ComponentsPool.get(compId(botData.entry, "Resist4")); 
-        // resist.SetText(botData.allStats['Resistance: frost']);
+        resist.SetText(`${GREEN_FONT_COLOR_CODE}${botData.allStats['Resistance: frost']}`);
         resist = <WoWAPI.FontString>ComponentsPool.get(compId(botData.entry, "Resist5")); 
-        // resist.SetText(botData.allStats['Resistance: shadow']);
+        resist.SetText(`${GREEN_FONT_COLOR_CODE}${botData.allStats['Resistance: shadow']}`);
+
+        // Update the stats frame
+        AddStats(undefined, botData); 
     }
 
 
@@ -652,10 +680,8 @@ if(!aio.AddAddon()) {
     function ShowBotFrame(botData: BotData) {
 
         let mainFrame: WoWAPI.Frame = null;         
-
         mainFrame = InfoFramePool.get(botData.entry);         
 
-        // if(mainFrame) { print('main frame already created'); }
         // Build the complete frame if we do not already have one in the pool. 
         if(!mainFrame) {
             mainFrame = CreateFrame("Frame", id("MainFrame"+botData.entry), UIParent, null, botData.entry);
@@ -675,14 +701,6 @@ if(!aio.AddAddon()) {
             mainFrame.SetScript("OnLeave", (frame) => {
                 frame.SetFrameLevel(5);
             });
-
-            mainFrame.RegisterEvent("CURSOR_UPDATE");
-            // mainFrame.RegisterEvent("ITEM_LOCK_CHANGED");
-            // mainFrame.RegisterEvent("ITEM_UNLOCKED");
-
-            mainFrame.SetScript("OnEvent", (frame: WoWAPI.Frame, eventName: WoWAPI.Event, ...args) => {                                                
-            }); 
-
             
             BotItemTooltip = CreateFrame("GameTooltip", id("ItemToolTip"+botData.entry), mainFrame, "GameTooltipTemplate", botData.entry);  
             BotItemTooltip.SetOwner(mainFrame, "ANCHOR_NONE");
@@ -700,10 +718,18 @@ if(!aio.AddAddon()) {
             InfoFramePool.set(botData.entry, mainFrame); 
             ComponentsPool.set(compId(botData.entry, "tooltip"), <WoWAPI.GameTooltip>BotItemTooltip); 
             mainFrame.Show();                              
+
+            // mainFrame.RegisterEvent("CURSOR_UPDATE");
+            // mainFrame.RegisterEvent("ITEM_LOCK_CHANGED");
+            mainFrame.RegisterEvent("ITEM_UNLOCKED");            
+            mainFrame.SetScript("OnEvent", (frame: WoWAPI.Frame, eventName: WoWAPI.Event, ...args) => {                              
+                if(eventName === "ITEM_UNLOCKED") {                    
+                    botStorage.ClearFromBank();                     
+                }
+            }); 
+
         } else {
-            mainFrame.Show();       
-            print("updating bot data"); 
-            print(botData.talentSpecName);          
+            mainFrame.Show();                    
             UpdateBotFrame(botData);
         }
 

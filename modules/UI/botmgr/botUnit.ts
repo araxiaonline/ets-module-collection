@@ -17,13 +17,18 @@ function humanizeTalentName(input: string): string {
         return input; // Return unchanged if the input is an empty string
     }
 
-    const parts = input.split("_");
-    parts[0] = parts[0].toLowerCase(); 
-    parts[0] = parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
-    parts[1] = parts[1].toLowerCase(); 
-    parts[1] = parts[1].charAt(0).toUpperCase() + parts[1].slice(1);
+    try {
+        const parts = input.split("_");
+        parts[0] = parts[0].toLowerCase(); 
+        parts[0] = parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
+        parts[1] = parts[1].toLowerCase(); 
+        parts[1] = parts[1].charAt(0).toUpperCase() + parts[1].slice(1);
+    
+        return `${parts[1]} ${parts[0]}`;
+    } catch (e) {
+        print(`failed to humanize talent name: ${input}` + e);
+    }
 
-    return `${parts[1]} ${parts[0]}`;
 }    
 export class BotUnit {
     
@@ -55,8 +60,13 @@ export class BotUnit {
         this.equipment = this._lookupEquipment();
         this.talentSpecId = creature.GetTalentSpec();     
         this.parseStats(creature.GetBotDump());
-        this.statsLeft = this._lookupStats('left');
-        this.statsRight = this._lookupStats('right');
+        try {
+            this.statsLeft = this._lookupStats('left');
+            this.statsRight = this._lookupStats('right');
+        } catch (e) {
+            print("failed to get stats for bot:" + e);
+        }
+        
         this.roles = creature.GetBotRoles();
         
            
@@ -116,7 +126,7 @@ export class BotUnit {
             left: [
                 "Strength",
                 "Agility",
-                "Dmg Main",
+                "Damage",
                 "Power",
                 "Hit Rating",
                 "Crit %",
@@ -131,7 +141,7 @@ export class BotUnit {
                 "Dodge",
                 "Parry",
                 "Block",
-                "Physical Resist"                
+                "Physical Res."                
             ]
         }
     }
@@ -141,7 +151,7 @@ export class BotUnit {
             left: [              
                 "Strength",
                 "Agility",
-                "Dmg Range",
+                "Damage Rng",
                 "Speed",
                 "Power",
                 "Hit Rating",
@@ -173,12 +183,12 @@ export class BotUnit {
                 "Spell Pen"                
             ],
             right: [
-                "Haste Rating",
-                "Spell Resist", 
+                "Haste Rating",                
                 "MP5",
+                "Spell Res.", 
                 "Dodge",
                 "Armor",
-                "Parry",                
+                "Parry",                                
             ]
         }
     }
@@ -266,34 +276,37 @@ export class BotUnit {
             let statValue = this.allStats[statName];
             const statRecord= {};  
 
+            // skip offhand stats will be handled with main hand
+            if(statName === 'Dmg Off') {
+                continue;
+            }
+
             // handle some special cases for stats 
-            if(statName === 'Dmg Main' || statName === 'Dmg Range' || statName == 'Dmg Off') {                
-                statValue = statValue.replace(" min: ", "").replace(", max: ", "-");
+            if(statName === 'Damage') {                                
                 statRecord[statName] = statValue;
                 classStats.push(statRecord); 
 
                 // Go ahead and add dual wield damage also
-                if(this.isDualWield()) {
-                    const offhand = this.allStats['Damage Range (Offhand)'];
-                    statRecord['Damage Range (Offhand)'] = offhand.replace(" min: ", "").replace(", max: ", "-");
-                    classStats.push(statRecord);                    
+                if(this.isDualWield()) {                    
+                    //statRecord['Dmg Off'] = statValue; 
+                    //classStats.push(statRecord);                    
                 }
                 continue; 
             }
-
+            
             if(this.isHealer() && statName === 'Bonus Dmg') {
                 statRecord['Bonus Heals'] = statValue;
                 classStats.push(statRecord);
-                print(`Stat: Bonus Heals = ${statValue}`);
+                // print(`Stat: Bonus Heals = ${statValue}`);
                 continue; 
             }
 
             if(statName && statValue) {
                 statRecord[statName] = statValue;
                 classStats.push(statRecord);
-                print(`Stat: ${statName} = ${statValue}`);
+                // print(`Stat: ${statName} = ${statValue}`);
             } else {
-                print("failed to get stat: " + statName); 
+                // print("failed to get stat: " + statName); 
             }
                         
         }
@@ -317,22 +330,31 @@ export class BotUnit {
             }
 
             parts[1] = parts[1].replace("(-0.00 pct)", ""); 
-            parts[1] = parts[1].replace("pct", "%");
+            parts[1] = parts[1].replace("pct", "%").trim();
             parts[1] = parts[1].replace("+", "");
 
             const statName = Common.BotStatLabel[parts[0]];
-            if(statName == "Dmg Main" || statName == "Dmg Off" || statName == "Dmg Range") {
+            if(statName == "Damage" || statName == "Dmg Off" || statName == "Damage Rng") {
                 parts[1] = parts[2].split(",")[0].trim() + "-" + parts[3].trim();  
                 
             }
 
-            if(statName == "Physical Resist" || statName == "Spell Resist") {
-                parts[1] = 1 - parseInt(parts[1]) + "%";
+            if(statName == "Physical Res." || statName == "Spell Res.") { 
+                const value = parseFloat(parts[1]);
+                if(value === 1) {
+                    parts[1] = "0.00%";
+                }
+                parts[1] = ((1 - value) * 100) + ".00%"; 
+                
+            }
+
+            if(statName == "Expertise") {
+                parts[1] = parts[1].trim().split(" ")[0]; 
             }
 
             if(statName == "Dodge" || statName == "Parry" || statName == "Block" || 
-            statName == "Crit Chance" ) {
-                parts[1] = parts[1] + " %";
+            statName == "Crit %" ) {
+                parts[1] = parts[1].trim() + "%";
             }
 
             if(statName == "Strength" || statName == "Agility" || statName == "Intellect" || 
@@ -340,8 +362,8 @@ export class BotUnit {
                 parts[1] = "" + Math.round(parseInt(parts[1]));
             }
 
-            this.allStats[statName] = parts[1].trim();   
-            print("Parsed Stat: " + statName + " = " + parts[1]);                 
+            this.allStats[statName] = parts[1].trim().replace(" %", "%");   
+            // print("Parsed Stat: " + statName + " = " + parts[1]);                 
         }        
     }
 }

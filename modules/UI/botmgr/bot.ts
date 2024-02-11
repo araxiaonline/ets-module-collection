@@ -18,6 +18,7 @@ export class BotStorage {
     private active: number = null;
     private pickedUp: boolean = false;
     private itemInHand: ItemInHand = { entry: undefined, link: undefined, bot: undefined, slot: undefined };
+    private bankItem: { entry: number, link: string, slot: number } = { entry: 0, link: '', slot: 0 };
 
     public GetBotData(entry: number): BotData | undefined {
         return this.storage.get(entry);
@@ -79,11 +80,24 @@ export class BotStorage {
         return this.itemInHand;
     }
 
+    GetFromBank(): { entry: number, link: string, slot: number } | undefined {
+        if(!this.bankItem) {
+            return undefined;
+        }
+        
+        return this.bankItem;
+    }
+
+    SetFromBank(item: { entry: number, link: string, slot: number }): void {
+        this.bankItem = item;
+    }
+
+    ClearFromBank(): void {
+        this.bankItem = undefined;
+    }
+
     BotItemCursorClear(): void {
-        this.itemInHand.entry = undefined;
-        this.itemInHand.link = undefined;
-        this.itemInHand.bot = undefined;
-        this.itemInHand.slot = undefined;
+        this.itemInHand = undefined;
         this.pickedUp = false;
     }
 

@@ -94,6 +94,22 @@ function TargetIsEligible(player: Player) {
 }
 
 /**
+ * Used to retrieve the bot for the player 
+ * @param player 
+ * @returns Creature
+ */
+function GetBotForPlayer(player: string, botEntry: number) {
+    try {
+        const owner = GetPlayerByName(player);
+        const creatures = owner.GetCreaturesInRange(300, botEntry) as Creature[];
+        const bot = creatures[0];
+        return bot; 
+    } catch (e) {
+        log.error(`Could not get bot for player ${player}: ${e}`);
+    }    
+}
+
+/**
  * @noSelf
  */
 function GetBotDetails(bot: Creature): BotData {
@@ -109,6 +125,25 @@ function GetBotDetails(bot: Creature): BotData {
 }
 
 /**
+ * Sends a client message with update bot details typically fired 
+ * after an equipment event. 
+ * @param player 
+ * @param botEntry 
+ */
+function RefreshBotData(bot: Creature): void {
+    try {        
+        bot.RegisterEvent((delay:number, repeats:number, bot: Creature) => {
+            const data = GetBotDetails(bot);
+            log.info(`Sending bot details to player: ${bot.GetBotOwner().GetName()}`); 
+            aio.Handle(bot.GetBotOwner(), 'BotMgr', 'UpdateBotData', data);    
+        }, 650, 1);         
+        
+    } catch (e) {
+        log.error(`Could not send bot details: ${e}`);
+    }
+}
+
+/**
  * Equip an item for the bot and update bot details
  * @param event 
  * @param player 
@@ -121,9 +156,7 @@ function EquipTheItem(player: string, botEntry: number, slot: BotEquipmentSlotNu
     }
 
     try {
-        const owner = GetPlayerByName(player);
-        const creatures = owner.GetCreaturesInRange(300, botEntry) as Creature[]; 
-        const bot = creatures[0];
+        const bot = GetBotForPlayer(player, botEntry);
         let data; 
     
         const isEligible = bot.BotCanEquipItem(item, slot);
@@ -136,10 +169,11 @@ function EquipTheItem(player: string, botEntry: number, slot: BotEquipmentSlotNu
            if(bot.BotEquipItem(item, slot)) {                  
                 data = GetBotDetails(bot);      
                 // log.log(`Bot successfully equipped item: ${item} in slot: ${slot}`);
-                aio.Handle(bot.GetBotOwner(), 'BotMgr', 'OnEquipSuccess',botEntry, slot, data.equipment[slot]);
+                aio.Handle(bot.GetBotOwner(), 'BotMgr', 'OnEquipSuccess',bot.GetEntry(), slot, data.equipment[slot]);
+                RefreshBotData(bot);
            } else {
                 // log.error(`Bot failed to equip item: ${item} in slot: ${slot}`);
-                aio.Handle(bot.GetBotOwner(), 'BotMgr', 'OnEquipFail', botEntry, slot, item, link);
+                aio.Handle(bot.GetBotOwner(), 'BotMgr', 'OnEquipFail', bot.GetEntry(), slot, item, link);
              }  
     } catch (error) {
         log.error(`Error equipping item: ${error}`);
@@ -149,23 +183,21 @@ function EquipTheItem(player: string, botEntry: number, slot: BotEquipmentSlotNu
 
 function UnequipTheItem(player: string, slot: number, botEntry: number): void {
     try {
-        const owner = GetPlayerByName(player);
-        const creatures = owner.GetCreaturesInRange(60, botEntry) as Creature[]; 
-        const bot = creatures[0];
-    
+        const bot = GetBotForPlayer(player, botEntry);
+        
         if(bot.BotUnequipBotItem(slot)) {
-            GetBotDetails(bot);
+            let data = GetBotDetails(bot);
             log.log(`Bot successfully unequipped item at slot: ${slot}`);
-            aio.Handle(bot.GetBotOwner(), 'BotMgr', 'OnUnEquipSuccess',slot, botEntry, );
+            aio.Handle(bot.GetBotOwner(), 'BotMgr', 'OnUnEquipSuccess',bot.GetEntry(), slot);
+            
+            RefreshBotData(bot);
        } else {
             log.error(`Bot failed to equip item in slot: ${slot}`);
-            aio.Handle(bot.GetBotOwner(), 'BotMgr', 'OnUnEquipFail', slot,  botEntry);
+            aio.Handle(bot.GetBotOwner(), 'BotMgr', 'OnUnEquipFail', bot.GetEntry(), slot);
          }  
     } catch (error) {
         log.error(`Error unequipping item: ${error}`);
-    }
-    
-         
+    }             
 }
 
 
@@ -217,7 +249,7 @@ const botMgrHandlers = aio.AddHandlers('BotMgr', {
     TargetIsEligible,
     GetBotPanelInfo, 
     "EquipTheItem": EquipTheItem,
-    "UnequipTheItem": UnequipTheItem,
+    "UnequipTheItem": UnequipTheItem    
 }); 
 
 
