@@ -41,7 +41,54 @@ export const BotSlotName = {
 } as const;
 
 export const BotEquipLast = 17;
-    
+export const BotStatLabel = {
+  "total str": "Strength",
+  "total agi": "Agility",
+  "total sta": "Stamina",
+  "total int": "Intellect",
+  "total spi": "Spirit",
+  "Melee AP": "Power",
+  "Ranged AP": "Power",
+  "armor": "Armor",
+  "crit": "Crit %",
+  "defense": "Defense",
+  "miss": "Miss",
+  "dodge": "Dodge",
+  "parry": "Parry",
+  "block": "Block",
+  "block value": "Block Value",
+  "Damage taken melee": "Physical Resist",
+  "Damage taken spell": "Spell Resist",
+  "Damage range mainhand": "Dmg Main",
+  "Damage range offhand": "Dmg Off",
+  "Attack time offhand": "Speed Off",
+  "Damage mult mainhand": "Damage Multiplier (Mainhand)",
+  "Attack time mainhand": "Speed Main",
+  "Damage range ranged": "Dmg Range",
+  "Damage mult ranged": "Damage Multiplier (Ranged)",
+  "Attack time ranged": "Speed",
+  "base hp": "Base Health",
+  "total hp": "Total Health",
+  "base mana": "Base Mana",
+  "total mana": "Total Mana",
+  "spell power": "Bonus Dmg",
+  "health regen_5 bonus": "Health Regen (5s Bonus)",
+  "haste": "Haste Rating",
+  "hit": "Hit Rating",
+  "expertise": "Expertise",
+  "mana regen_5 casting": "MP5",
+  "armor penetration": "Armor Pen",
+  "spell penetration": "Spell Pen",
+  "Resistance: holy": "Resist Holy",
+  "Resistance: fire": "Resist Fire",
+  "Resistance: nature": "Resist Nature",
+  "Resistance: frost": "Resist Frost",
+  "Resistance: shadow": "Resist Shadow",
+  "Resistance: arcane": "Resist Arcane",
+} as const;
+
+export type BotStatName = Partial<typeof BotStatLabel[keyof typeof BotStatLabel]>;
+
 export const BotStat = {
     MANA:                      0,
     HEALTH:                    1,
@@ -100,7 +147,7 @@ export const BotStat = {
     MAX_BOT_ITEM_MOD:         59,
     BOT_STAT_MOD_RESISTANCE_START: 51, // Assuming BOT_STAT_MOD_ARMOR is defined somewhere
   } as const;
-  
+
 export const BotStatLast = 58;
   
 export const UIInvSlot = {
@@ -167,7 +214,7 @@ export const RacesMapping: Record<number, string> = {
 
 export type CharacterRace = typeof RacesMapping[keyof typeof RacesMapping];
 
-export const BotTalentSpecs = {
+export const TalentSpecs = {
   WARRIOR_ARMS         : 1,
   WARRIOR_FURY         : 2,
   WARRIOR_PROTECTION   : 3,
@@ -203,10 +250,6 @@ export const BotTalentSpecs = {
   END                  : 31 
 } as const;
 
-export function talentSpecName(id: number) {
-  return Object.keys(BotTalentSpecs).find(key => BotTalentSpecs[key] === id);
-}
-
 export const BotRoles = {
   NONE                   : 0,
   TANK                   : 1,
@@ -226,10 +269,10 @@ export const BotRoles = {
   AUTOLOOT_RARE          : 16384,
   AUTOLOOT_EPIC          : 32768,
   AUTOLOOT_LEGENDARY     : 65536,  
-  MASK_MAIN              : (1 | 2 | 4 | 8 | 16),  
-  MASK_GATHERING         : (64 | 128 | 256 | 512),
-  MASK_LOOTING           : (2048 | 4096 | 8192 | 16384 | 32768 | 65536),  
-  BOT_MAX_ROLE                    : 131072,
+//   MASK_MAIN              : (1 | 2 | 4 | 8 | 16),  
+//   MASK_GATHERING         : (64 | 128 | 256 | 512),
+//   MASK_LOOTING           : (2048 | 4096 | 8192 | 16384 | 32768 | 65536),  
+//   BOT_MAX_ROLE                    : 131072,
 } as const;
 
 
