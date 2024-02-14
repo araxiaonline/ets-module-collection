@@ -329,7 +329,11 @@ if(!aio.AddAddon()) {
             if(!statValue) {
                 statValue = parent.CreateFontString(id(`StatValue-${statName}`), "ARTWORK", "GameFontNormalSmall");
                 statValue.SetPoint("TOPRIGHT", parent, "TOP", -4, -5 - (i * 14));
-                statValue.SetSize(50, 14);             
+                if(statName === "Damage") {
+                    statValue.SetSize(90, 14); 
+                } else {
+                    statValue.SetSize(50, 14);
+                }           
                 statValue.SetJustifyH("RIGHT");        
                 ComponentsPool.set(compId(botData.entry, `StatValue-${statName}`), statValue); 
             }
