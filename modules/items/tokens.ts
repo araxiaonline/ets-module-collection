@@ -110,6 +110,8 @@ const TokenKillEvent: player_event_on_kill_creature = (event: number, player: Pl
   if(roll <= rollModifer) {
 
     createChest(player, creature, 'center'); 
+    createChest(player, creature, 'left'); 
+    
     
     // Add player stat they created token
     const pStats = new PlayerStats(player);
@@ -122,7 +124,7 @@ const TokenKillEvent: player_event_on_kill_creature = (event: number, player: Pl
     if(creature.IsWorldBoss() || creature.IsDungeonBoss()) {
       roll = Math.floor(Math.random() * TOKEN_ROLL_CAP);
       if(roll <= rollModifer+200 ) {
-        createChest(player, creature,'left');     
+        createChest(player, creature,'right');     
       }
     }
   }   

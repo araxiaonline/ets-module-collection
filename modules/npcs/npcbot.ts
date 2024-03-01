@@ -29,42 +29,42 @@ const enterCombat: creature_event_on_enter_combat = (event: number, creature: Cr
     return false; 
 }
 
-const playerEmote: player_event_on_text_emote = (event: number, player: Player, textEmote: number, emoteNum: number, guid: number) => {
+// const playerEmote: player_event_on_text_emote = (event: number, player: Player, textEmote: number, emoteNum: number, guid: number) => {
     
-    print('Emote: ' + textEmote);
-    print('EmoteNum: ' + emoteNum); 
+//     print('Emote: ' + textEmote);
+//     print('EmoteNum: ' + emoteNum); 
 
-    const unit = player.GetSelection();
+//     const unit = player.GetSelection();
 
-    if(!unit) {
-        return false; 
-    }
-    if(unit.GetTypeId() ==  TypeID.TYPEID_UNIT) {
-        const creature = unit.ToCreature();
+//     if(!unit) {
+//         return false; 
+//     }
+//     if(unit.GetTypeId() ==  TypeID.TYPEID_UNIT) {
+//         const creature = unit.ToCreature();
         
-        print(`BotName ${creature.GetName()}`);      
+//         print(`BotName ${creature.GetName()}`);      
         
-        if(creature.IsNPCBot()) {
-            const owner = creature.GetOwner();
-            print(owner); 
-            if(owner !== undefined) {
-                print(`Owner: ${owner.GetName()}`);       
-                print(`Bot Gear Item Level: ${creature.GetBotAverageItemLevel()}`);         
-                print(`Bot Roles ${creature.GetBotRoles()}`);                
-                print(`IsBotTank: ${creature.IsBotTank()}`);
-                print(`IsBotOffTank ${creature.IsBotOffTank()}`);                
-            }           
+//         if(creature.IsNPCBot()) {
+//             const owner = creature.GetOwner();
+//             print(owner); 
+//             if(owner !== undefined) {
+//                 print(`Owner: ${owner.GetName()}`);       
+//                 print(`Bot Gear Item Level: ${creature.GetBotAverageItemLevel()}`);         
+//                 print(`Bot Roles ${creature.GetBotRoles()}`);                
+//                 print(`IsBotTank: ${creature.IsBotTank()}`);
+//                 print(`IsBotOffTank ${creature.IsBotOffTank()}`);                
+//             }           
             
-            print(`Generic Info ------------`); 
-            const botclass = creature.GetClass();
-            print(`Bot Class: ${botclass}`);    
-            print(`Bot Str ${creature.GetBotStat(4)}`); 
-            print(`Is Free Bot: ${creature.IsFreeBot()}`);
+//             print(`Generic Info ------------`); 
+//             const botclass = creature.GetClass();
+//             print(`Bot Class: ${botclass}`);    
+//             print(`Bot Str ${creature.GetBotStat(4)}`); 
+//             print(`Is Free Bot: ${creature.IsFreeBot()}`);
 
-        }
+//         }
 
-    }    
-}
+//     }    
+// }
 
 const playerChat: player_event_on_chat = (event: number, player: Player, message: string, type: number, lang: number) => {
                 
@@ -134,8 +134,7 @@ RegisterCreatureEvent(
     (...args) => enterCombat(...args)
 );
 
-RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_TEXT_EMOTE, (...args) => playerEmote(...args)); 
+// RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_TEXT_EMOTE, (...args) => playerEmote(...args)); 
 
 RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_CHAT, (...args) => playerChat(...args));
-
 
