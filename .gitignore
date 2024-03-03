@@ -2,7 +2,6 @@ ets.env
 node_modules
 node_modules/*
 dist
-.vscode
 wow-wotlk-declarations
 
 

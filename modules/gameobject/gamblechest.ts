@@ -107,9 +107,11 @@ const onLootStateChange: gameobject_event_on_loot_state_change = (event: number,
             const player = gameObject.GetNearestPlayer(15);            
 
             const sound = TrapSounds[Math.floor(Math.random() * TrapSounds.length)];
-            aio.Handle(player, 'AIOAudioPlayer', 'PlaySingleSound', sound);
-
-            player.SendNotification("Your rolled a 1, Critical Fail!");
+            const players = gameObject.GetPlayersInRange(50);
+            for(let i = 0; i < players.length; i++) {
+                const player = players[i];
+                aio.Handle(player, 'AIOAudioPlayer', 'PlaySingleSound', sound);
+            }            
 
             for(let i =0; i < 20; i++) {
                 if(player.IsAlive()) {
@@ -119,11 +121,15 @@ const onLootStateChange: gameobject_event_on_loot_state_change = (event: number,
                                                                                 
             creature1.DespawnOrUnsummon();                                         
         } else {
-            aio.Handle(gameObject.GetNearestPlayer(), 'AIOAudioPlayer', 'PlaySingleSound', LootGoodSound);
+            const players = gameObject.GetPlayersInRange(50);
+            for(let i = 0; i < players.length; i++) {
+                const player = players[i];
+                aio.Handle(player, 'AIOAudioPlayer', 'PlaySingleSound', LootGoodSound);
+            }
+            
         }
 
-        gameObject.RemoveEventById(event);
-        gameObject.Despawn(); 
+        gameObject.RemoveEventById(event);        
     }
 };
 

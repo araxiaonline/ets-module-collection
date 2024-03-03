@@ -2,9 +2,7 @@
 let aio: AIO = {}; 
 if(!aio.AddAddon()) {
     const audioHandlers = aio.AddHandlers('AIOAudioPlayer', {});
-    audioHandlers.PlaySingleSound = (sound: string) => {    
-       print("Playing Source Sound: " + sound);
+    audioHandlers.PlaySingleSound = (sound: string) => {           
         PlaySoundFile(sound, "Master");
-
     };    
 }
