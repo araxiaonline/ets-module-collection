@@ -71,9 +71,9 @@ const onKillCreature: player_event_on_kill_creature = (event: number, killer: Pl
     if(!map.IsDungeon() && !map.IsRaid()) {
         return false; 
     }
-    if(!map.IsHeroic()) {
-        return false;
-    }
+    // if(!map.IsHeroic()) {
+    //     return false;
+    // }
 
     if(killed.GetLevel() < (killer.GetLevel() - 5)) {        
         return false;
@@ -82,8 +82,7 @@ const onKillCreature: player_event_on_kill_creature = (event: number, killer: Pl
     const [x,y,z,o] = killed.GetLocation();
     let roll = Math.floor(Math.random() * 100);
     
-    
-    if(roll > 4) {
+    if(roll > 8) {
         return; 
     }
 
@@ -104,7 +103,7 @@ const onLootStateChange: gameobject_event_on_loot_state_change = (event: number,
         if(LootTrapMap[gameObject.GetGUIDLow()] == true) {
             
             const creature1: Creature = <Creature>PerformIngameSpawn(1, BombCreature, gameObject.GetMapId(), gameObject.GetInstanceId(), gameObject.GetX(), gameObject.GetY(), gameObject.GetZ(),gameObject.GetO(), false, 100);                   
-            const player = gameObject.GetNearestPlayer(15);            
+            const player = gameObject.GetNearestPlayer(50);            
 
             const sound = TrapSounds[Math.floor(Math.random() * TrapSounds.length)];
             const players = gameObject.GetPlayersInRange(50);
