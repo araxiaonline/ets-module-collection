@@ -321,7 +321,7 @@ export class ItemDetails {
       return false;
     }
 
-    const defStats = [1,7,12, 13, 14, 15, 22, 23, 24, 25, 26, 27, 48];
+    const defStats = [1,12, 13, 14, 15, 22, 23, 24, 25, 26, 27, 48];
     for (let i = 1; i <= 8; i++) {        
       let statType = stats[`stat_type${i}`] ? <number>stats[`stat_type${i}`] : 0;
       

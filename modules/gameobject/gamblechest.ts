@@ -40,7 +40,7 @@ function RollLootTrap(object: GameObject) {
         LootTrapMap[object.GetGUIDLow()] = false;
         return;
     } else if(roll > 79) {
-        object.AddLoot(45878, 1);       // Large Sack of Uldaur Spoils 3%    
+        object.AddLoot(43347, 1);       // Large Sack of Uldaur Spoils 3%    
         LootTrapMap[object.GetGUIDLow()] = false;
         return;
     } else if(roll > 67) {
@@ -68,6 +68,8 @@ function RollLootTrap(object: GameObject) {
 const onKillCreature: player_event_on_kill_creature = (event: number, killer: Player, killed: Creature) => {
     const map: EMap = killed.GetMap();
     
+    return false; 
+
     if(!map.IsDungeon() && !map.IsRaid()) {
         return false; 
     }
@@ -82,7 +84,7 @@ const onKillCreature: player_event_on_kill_creature = (event: number, killer: Pl
     const [x,y,z,o] = killed.GetLocation();
     let roll = Math.floor(Math.random() * 100);
     
-    if(roll > 8) {
+    if(roll > 4) {
         return; 
     }
 

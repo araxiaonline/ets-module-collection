@@ -79,7 +79,7 @@ const XPBonus: player_event_on_give_xp = (event: number, player: Player, amount:
         
     const xpRate = xpRateCache.get(player.GetGUIDLow());    
     if(xpRate && xpRate > 1) {
-        player.GiveXP(amount * xpRate); 
+       // player.GiveXP(amount * xpRate); 
     } 
 
 }

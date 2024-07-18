@@ -89,7 +89,7 @@ const TokenKillEvent: player_event_on_kill_creature = (event: number, player: Pl
 
     // Group Drop Rates
     if(creature.IsWorldBoss() || creature.IsDungeonBoss()) {
-      rollModifer += 300;
+      rollModifer += 100;
     } else {
       if(creature.IsElite()) {
         rollModifer = rollModifer + 30; 
@@ -97,7 +97,7 @@ const TokenKillEvent: player_event_on_kill_creature = (event: number, player: Pl
     }
 
     if(map.IsRaid() || map.IsHeroic()) {
-      rollModifer = rollModifer + (20 * groupCount); 
+      rollModifer = rollModifer + (8 * groupCount); 
     } else {
       if(map.IsDungeon()) {
         rollModifer = rollModifer + (4 * groupCount);
@@ -123,7 +123,7 @@ const TokenKillEvent: player_event_on_kill_creature = (event: number, player: Pl
   if(groupCount >= TOKEN_GROUP_SIZE) {
     if(creature.IsWorldBoss() || creature.IsDungeonBoss()) {
       roll = Math.floor(Math.random() * TOKEN_ROLL_CAP);
-      if(roll <= rollModifer+200 ) {
+      if(roll <= rollModifer+100 ) {
         createChest(player, creature,'right');     
       }
     }

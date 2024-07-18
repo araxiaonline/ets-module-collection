@@ -8,6 +8,18 @@ function randomInteger(min: number, max: number) {
 
 function getEnchant(stat: string, min: number, max: number) {
 
+    if(stat.includes("Dodge Rating")) {
+        min = 5;
+        max = 20;
+    }
+
+    if(stat.includes("Hit Rating")) {
+        
+        if (max > 50) {
+            max = 50;            
+        }        
+    }
+
     const sql = `
         SELECT ID
         FROM acore_world.spellitemenchantment_dbc 
@@ -19,7 +31,9 @@ function getEnchant(stat: string, min: number, max: number) {
 
     const query = WorldDBQuery(sql);
     if(!query) {
-        PrintError("Query Failed: ", sql );
+       
+        PrintError("BonusEnchantment/getEnchantment - Failed to get enchantment for stat: " + stat);
+        print(sql); 
         return null;
     }
 
@@ -139,20 +153,20 @@ function rollEnchant(item: Item, highStats: boolean): number[] {
     }
 
     if (highStats) {
-        enchantId = getEnchant(primary, 30, 150);                                
+        enchantId = getEnchant(primary, 10, 120);                                
 
     } else {
-        enchantId = getEnchant(primary, 10, 30);        
+        enchantId = getEnchant(primary, 5, 40);        
     }
 
     if(secondary.includes("Resist")) {
         if(highStats) {
-            secEnchantId = getEnchant(secondary, 50, 100);
+            secEnchantId = getEnchant(secondary, 20, 70);
         } else {
-            secEnchantId = getEnchant(secondary, 34, 44);
+            secEnchantId = getEnchant(secondary, 10, 38);
         }
     } else {
-        secEnchantId = getEnchant(secondary, 5, 45);
+        secEnchantId = getEnchant(secondary, 5, 40);
     }
 
     return [enchantId, secEnchantId];
@@ -166,9 +180,9 @@ RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_LOOT_ITEM, (event, player, item
         return;
     }
 
-    // if (item.GetEntry() < SCALED_ITEMS_START) {
-    //     return; 
-    // }
+    if (item.GetEntry() < SCALED_ITEMS_START) {
+        return; 
+    }
 
     if (itemCls !== 2 && itemCls !== 4) {
         return; 
