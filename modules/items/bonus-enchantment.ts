@@ -215,5 +215,8 @@ RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_LOOT_ITEM, (event, player, item
     if(ids[1]) {
         item.SetEnchantment(ids[1], 5);
     }
+
+
+    PrintInfo("BonusEnchantment/OnLootItem - Enchanting item: " + item.GetEntry() + " with enchants: " + ids[0] + " and " + ids[1]);
             
 }); 

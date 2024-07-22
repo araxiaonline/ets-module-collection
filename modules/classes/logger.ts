@@ -13,6 +13,12 @@ export class Logger {
         print(`[${this.logname}][Log]: ${message} was printed from ${info.short_src}:${info.currentline}`);
     }
 
+    debug(message: string) {
+        const info = debug.getinfo(2, "Sl");
+        PrintDebug(`[${this.logname}][Debug]: ${message} was printed from ${info.short_src}:${info.currentline}`);
+    }
+
+
     info(message: string) {
         const info = debug.getinfo(2, "Sl");
         PrintInfo(`[${this.logname}][Info]: ${message} was printed from ${info.short_src}:${info.currentline}`);

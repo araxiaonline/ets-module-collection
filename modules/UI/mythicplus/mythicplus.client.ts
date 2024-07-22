@@ -1,5 +1,8 @@
 /** @ts-expect-error */
-let aio: AIO = {}; 
+let aio: AIO = {};
+
+import { MythicPlusState } from "./mythicplus.state";
+
 if(!aio.AddAddon()) {
 
 const mythicPlusHandlers = aio.AddHandlers('MythicPlus', {}); 
@@ -12,11 +15,6 @@ const selectImages = [
     "Interface/MythicPlus/ascendant",
     "Interface/MythicPlus/ascendant-selected"
 ];
-
-type SelectionState = {
-    difficulty: number;
-    selected: number; 
-}
 
 const Difficulty = {
     Mythic: 2,
@@ -51,9 +49,12 @@ const MPanelSounds = {
 }; 
 
 let MythicUIPanel: WoWAPI.Frame; 
-const MythicClientState: SelectionState = {
+let MythicClientState: MythicPlusState = {
     difficulty: 0,
-    selected: 0    
+    groupId: -1,
+    groupLeader: -1,
+    inGroup: false,
+    isLeader: false,
 };
 
 let Text = {
@@ -63,7 +64,7 @@ let Text = {
     MYTHIC_DESC3: `Potential Affixes: 0`,
     MYTHIC_DESC4: `Party Deaths: |cff1eff00 Unlimited`,
     MYTHIC_REWARD1: `Drops: |cff9F3FFF Epic up to 320`,
-    MYTHIC_REWARD2: `Bonus Stats: 1 High Stat`,
+    MYTHIC_REWARD2: `Bonus Stats: Mid Tier`,
 
     LEGENDARY_TITLE: `LEGENDARY DUNGEON`,
     LEGENDARY_DESC1: `Enemy Strength: x3`,
@@ -71,7 +72,7 @@ let Text = {
     LEGENDARY_DESC3: `Potential Affixes: 1`,
     LEGENDARY_DESC4: `Party Deaths: |cff1eff00 Unlimited`,
     LEGENDARY_REWARD1: `Drops: |cff9F3FFF Epic up to 340`,
-    LEGENDARY_REWARD2: `Bonus Stats: 1 High Stat / 1 Low Stat`,
+    LEGENDARY_REWARD2: `Bonus Stats: High Tier`,
 
     ASCENDANT_TITLE: `ASCENDANT DUNGEON`,
     ASCENDANT_DESC1: `Enemy Strength: x5`,
@@ -79,23 +80,24 @@ let Text = {
     ASCENDANT_DESC3: `Potential Affixes: 2`,
     ASCENDANT_DESC4: `Party Deaths:|cffff0000 15 (Instance Reset at 0 lives)`,
     ASCENDANT_REWARD1: `Drops:|cffFF8400 Legendary up to 360 `,
-    ASCENDANT_REWARD2: `Bonus Stats: 2 High Stats`,
+    ASCENDANT_REWARD2: `Bonus Stats: Epic Tier`,
 
     DEFAULT_DESC1: `Harder difficulty dungeon not set.`,
     DEFAULT_DESC2: `Select a dungeon difficulty to view information.`
 }
 
-
+// These are used to store the textures and fonts for the Mythic+ UI panel so they can 
+// be referenced in different functions
 const MPTextures: Record<string, WoWAPI.Texture> = {};
 const MPFonts: Record<string, WoWAPI.FontString> = {};
-
 
 function refreshUIState() {
     updateInfoText(MythicClientState.selected);
     updateSkulls(MythicClientState.selected);
 }
 
-function updateSkulls(selected: number) {
+// Updates the skull images based on the selected difficulty passed in
+function updateSkulls(selected: number): void {
     switch(selected) {
         case Difficulty.Mythic: {
             MPTextures[`SkullImg2`].SetTexture(selectImages[1]);
@@ -138,6 +140,7 @@ function updateSkulls(selected: number) {
     }
 }
 
+// Updates the information text based on the selected difficulty passed in
 function updateInfoText(difficulty: Difficulty) {
     const titleFont = MPFonts[`InfoTitle`];
     const descFont1 = MPFonts[`InfoDesc1`];
@@ -202,6 +205,7 @@ function updateInfoText(difficulty: Difficulty) {
 }
 
 
+// Creates the information text for the Mythic+ UI panel
 function CreateInfoText(parent: WoWAPI.Frame, difficulty: Difficulty = null): void {
 
     const infoFrame = CreateFrame("Frame", `MPInfoFrame`, parent);
@@ -251,10 +255,10 @@ function CreateInfoText(parent: WoWAPI.Frame, difficulty: Difficulty = null): vo
     MPFonts[`Reward2`] = reward2;
 }
 
+// Creates the skull frames UI elements and artwork for the Mythic+ UI panel
 function CreateSkullFrame(difficulty: Difficulty, title: string, imageIndex: number): void {
 
     const parent = _G["MythicPlusPanel"];    
-
     const MythicFrame = CreateFrame("Frame", `SkullFrame${difficulty}`, parent, null, difficulty);
     MythicFrame.SetSize(MPanelStyles.skullWidth, MPanelStyles.skullHeight);
 
@@ -287,8 +291,11 @@ function CreateSkullFrame(difficulty: Difficulty, title: string, imageIndex: num
 
         if(MythicClientState.selected == f.GetID()) {
             MythicClientState.selected = 0;
+            SetDungeonDifficulty(2);             
+            refreshUIState();        
         } else {    
             MythicClientState.selected = f.GetID();
+            SetDungeonDifficulty(2);       
         }
 
         aio.Handle("MythicPlus", "SetDifficulty", MythicClientState.selected);
@@ -350,17 +357,15 @@ function ShowUIPanel(): void {
     mainFrame.Show();
 }
 
-mythicPlusHandlers.ShowUI = (state) : void => {    
-    MythicClientState.difficulty = state.difficulty;
-    MythicClientState.selected = state.difficulty;
+mythicPlusHandlers.ShowUI = (state: MythicPlusState) : void => {    
+    MythicClientState = state;
     ShowUIPanel(); 
-
     refreshUIState();    
 }; 
 
-mythicPlusHandlers.SetDifficulty = (difficulty: number): void => {
-    MythicClientState.difficulty = difficulty;
-    updateInfoText(difficulty);
+mythicPlusHandlers.UpdateState = (state: MythicPlusState) : void => {
+    MythicClientState = state;
+    refreshUIState();
 }
 
 // Shows the button that opens the Mythic+ UI
