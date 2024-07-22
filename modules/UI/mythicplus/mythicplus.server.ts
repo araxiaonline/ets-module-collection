@@ -5,6 +5,8 @@ import { Logger } from "../../classes/logger";
 import type { MythicPlusState } from "./mythicplus.state";
 
 const logger = new Logger("MythicPlusMod");
+
+// PlayerGUID -> MythicPlusState
 const StateStorage: Map<number, MythicPlusState> = new Map();
 
 // This looks up the current group id for the player -1 indicates no group
@@ -57,6 +59,7 @@ function _setDifficulty(player: Player, difficulty: number): void {
         return;
     }
 
+    // 0 is the lowest difficulty and 4 is the highest
     if(difficulty > 4) {
         logger.error(`Invalid difficulty set:  ${difficulty}`);
     }
@@ -74,6 +77,7 @@ function SetDifficulty(this:void, player: Player, difficulty: number): void {
     aio.Handle(player, 'MythicPlus', 'UpdateState', StateStorage.get(player.GetGUIDLow()));     
 }
 
+// This is used to 
 function _refreshState(player: Player) {
     if(player.IsInGroup()) {
         const groupId = getPlayerGroupId(player);
@@ -94,6 +98,7 @@ function GetState(this:void, player: Player): void {
     aio.Handle(player, 'MythicPlus', 'UpdateState', state);
 }
 
+// This is the command to open the mythic plus panel
 const OpenUI: player_event_on_command = (event: number,player: Player, command: string): boolean => {
     if(command == 'mythicplus') {            
         const state = StateStorage.get(player.GetGUIDLow());
@@ -110,17 +115,54 @@ const OpenUI: player_event_on_command = (event: number,player: Player, command: 
     return true; 
 }; 
 
+// This enables the client to fire a request to open the mythic plus panel after updating state
+function ShowUI(this:void, player: Player): void {
+    _refreshState(player);
+    aio.Handle(player, 'MythicPlus', 'ShowUI', StateStorage.get(player.GetGUIDLow())); 
+}
+
 RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_COMMAND, (...args) => OpenUI(...args));
 
 const MPStartState: player_event_on_login = (_event: number, player: Player): void => {
     _refreshState(player);
+    aio.Handle(player, 'MythicPlus', 'UpdateState', StateStorage.get(player.GetGUIDLow()));
 };
 
 // On login set up the mythic panel mod state for the player
 RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_LOGIN, (...args) => MPStartState(...args));
 
+const MPGroupDisband: group_event_on_disband = (_event: number, group: Group): void => {
+    const members = group.GetMembers();
+
+    for(let i = 0; i < members.length; i++) {
+        _refreshState(members[i]);
+        aio.Handle(members[i], 'MythicPlus', 'UpdateState', StateStorage.get(members[i].GetGUIDLow()));
+    }
+}
+
+RegisterGroupEvent(GroupEvents.GROUP_EVENT_ON_DISBAND, (...args) => MPGroupDisband(...args));
+
+// When a leader change happens need to update the state storage for each leader to enable changes in the panel. 
+const MPLeaderChange: group_event_on_leader_change = (_event: number,group: Group, leader: number, oldLeader: number): void => {
+    _refreshState(GetPlayerByGUID(leader));
+    aio.Handle(GetPlayerByGUID(leader), 'MythicPlus', 'UpdateState', StateStorage.get(leader));
+
+    _refreshState(GetPlayerByGUID(oldLeader));
+    aio.Handle(GetPlayerByGUID(oldLeader), 'MythicPlus', 'UpdateState', StateStorage.get(oldLeader));
+}
+
+RegisterGroupEvent(GroupEvents.GROUP_EVENT_ON_LEADER_CHANGE, (...args) => MPLeaderChange(...args));
+
+
+const DeletePlayerState: player_event_on_logout = (event: number, player: Player) => {
+    StateStorage.delete(player.GetGUIDLow());
+};
+
+RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_LOGOUT, (...args) => DeletePlayerState(...args));      
+
 // API Handlers available to the client
 const MPHandlers = aio.AddHandlers("MythicPlus", {    
+    ShowUI,
     SetDifficulty, 
     GetState,
 }); 

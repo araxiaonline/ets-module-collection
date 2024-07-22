@@ -92,8 +92,8 @@ const MPTextures: Record<string, WoWAPI.Texture> = {};
 const MPFonts: Record<string, WoWAPI.FontString> = {};
 
 function refreshUIState() {
-    updateInfoText(MythicClientState.selected);
-    updateSkulls(MythicClientState.selected);
+    updateInfoText(MythicClientState.difficulty);
+    updateSkulls(MythicClientState.difficulty);
 }
 
 // Updates the skull images based on the selected difficulty passed in
@@ -258,7 +258,7 @@ function CreateInfoText(parent: WoWAPI.Frame, difficulty: Difficulty = null): vo
 // Creates the skull frames UI elements and artwork for the Mythic+ UI panel
 function CreateSkullFrame(difficulty: Difficulty, title: string, imageIndex: number): void {
 
-    const parent = _G["MythicPlusPanel"];    
+    const parent = MythicUIPanel;  
     const MythicFrame = CreateFrame("Frame", `SkullFrame${difficulty}`, parent, null, difficulty);
     MythicFrame.SetSize(MPanelStyles.skullWidth, MPanelStyles.skullHeight);
 
@@ -275,7 +275,7 @@ function CreateSkullFrame(difficulty: Difficulty, title: string, imageIndex: num
         texture.SetAlpha(1);                
     });
     MythicFrame.SetScript("OnLeave", function(f: WoWAPI.Frame) {
-        if(MythicClientState.selected == f.GetID()) {
+        if(MythicClientState.difficulty == f.GetID()) {
             return;
         }        
         const texture = <WoWAPI.Texture>MPTextures[`SkullImg${difficulty}`];
@@ -289,16 +289,16 @@ function CreateSkullFrame(difficulty: Difficulty, title: string, imageIndex: num
     
         PlaySound("PVPTHROUGHQUEUE");        
 
-        if(MythicClientState.selected == f.GetID()) {
-            MythicClientState.selected = 0;
-            SetDungeonDifficulty(2);             
+        if(MythicClientState.difficulty == f.GetID()) {
+            MythicClientState.difficulty = GetDungeonDifficultyID() - 1;            
             refreshUIState();        
         } else {    
-            MythicClientState.selected = f.GetID();
-            SetDungeonDifficulty(2);       
+            MythicClientState.difficulty = f.GetID();
+            // always assume heoric for map setting for scaling under the hood.
+            SetDungeonDifficulty(2); 
         }
 
-        aio.Handle("MythicPlus", "SetDifficulty", MythicClientState.selected);
+        aio.Handle("MythicPlus", "SetDifficulty", MythicClientState.difficulty);
         refreshUIState();        
     });
 
@@ -314,6 +314,7 @@ function CreateSkullFrame(difficulty: Difficulty, title: string, imageIndex: num
     titleFont.SetText(title);
 }
 
+// Main launch pad for the Mythic+ UI panel
 function ShowUIPanel(): void {
 
     if(MythicUIPanel) {
@@ -341,12 +342,14 @@ function ShowUIPanel(): void {
     
     MythicUIPanel = mainFrame;    
 
+    // This is used to create an all black background for the Mythic+ UI panel
     const bgTexture = mainFrame.CreateTexture("MythicBGTexture", "OVERLAY");
     bgTexture.SetAllPoints(mainFrame);
     bgTexture.SetTexture("Interface\\Buttons\\WHITE8X8")
     bgTexture.SetVertexColor(0.0, 0.0, 0.0, 0.8);
     bgTexture.SetSize(MPanelStyles.width,MPanelStyles.height);
 
+    // This creates all the skull selectors for the mythic board. 
     CreateSkullFrame(Difficulty.Mythic, "Mythic +", 0);
     CreateSkullFrame(Difficulty.Legendary, "Legendary ++", 2);
     CreateSkullFrame(Difficulty.Ascendant, "Ascendant +++", 4);
@@ -371,7 +374,7 @@ mythicPlusHandlers.UpdateState = (state: MythicPlusState) : void => {
 // Shows the button that opens the Mythic+ UI
 function ShowUIButton(): void {
     const button = CreateFrame("Button", "MythicPlusButton", UIParent);
-    button.SetSize(28, 58);
+    button.SetSize(32, 32);
     button.SetPoint("TOPRIGHT", -25, -225);
     button.EnableMouse(true);
     // button.SetBackdrop({        
@@ -391,23 +394,23 @@ function ShowUIButton(): void {
             return;
         }
         PlaySound("GAMEDIALOGOPEN");
-        mythicPlusHandlers.ShowUI();
+        aio.Handle("MythicPlus", "ShowUI");        
     });
 
-    // const btnBg = button.CreateTexture("MythicPlusButtonBG", "BACKGROUND");
-    // btnBg.SetAllPoints(button);
-    // btnBg.SetTexture("Interface\\Buttons\\WHITE8X8");
-    // btnBg.SetVertexColor(0, 0, 0, 1);
+    const btnBg = button.CreateTexture("MythicPlusButtonBG", "BACKGROUND");
+    btnBg.SetAllPoints(button);
+    btnBg.SetTexture("Interface\\Buttons\\WHITE8X8");
+    btnBg.SetVertexColor(0, 0, 0, 1);
 
-    // const btnTexture = button.CreateTexture("MythicPlusButtonTexture", "ARTWORK");
-    // btnTexture.SetPoint("CENTER", 0, 0);
-    // btnTexture.SetSize(32, 32);
-    // btnTexture.SetTexture(selectImages[0]);
-
-    const btnTexture = button.CreateTexture("MythicPlusButtonTexture", "OVERLAY");
-     btnTexture.SetTexture("Interface\\Buttons\\UI-MicroButton-Socials-Up");
+    const btnTexture = button.CreateTexture("MythicPlusButtonTexture", "ARTWORK");
     btnTexture.SetPoint("CENTER", 0, 0);
     btnTexture.SetSize(32, 32);
+    btnTexture.SetTexture(selectImages[0]);
+
+    // const btnTexture = button.CreateTexture("MythicPlusButtonTexture", "OVERLAY");
+    //  btnTexture.SetTexture("Interface\\Buttons\\UI-MicroButton-Socials-Up");
+    // btnTexture.SetPoint("CENTER", 0, 0);
+    // btnTexture.SetSize(32, 32);
     // btnTexture.SetTexture(selectImages[0]);
 }
 
