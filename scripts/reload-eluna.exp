@@ -1,0 +1,7 @@
+#!/usr/bin/expect -f
+spawn docker attach ac-worldserver
+expect ">"
+send ".reload eluna\r"
+sleep 1
+send "\x10\x11"
+expect eof

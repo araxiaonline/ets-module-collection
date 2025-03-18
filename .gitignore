@@ -3,5 +3,5 @@ node_modules
 node_modules/*
 dist
 wow-wotlk-declarations
-
+.DS_Store
 

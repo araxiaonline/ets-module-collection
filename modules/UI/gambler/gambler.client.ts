@@ -217,6 +217,7 @@ function ShowSlots(player: Player) {
 
     gamblerHandlers.StartSpin = (player: Player) => {        
         SpinSlots(Slots, [Slot1, Slot2, Slot3]);
+        SendChatMessage("Started a spin", "CHANNEL", null, "7");
     }
     
     GamblerMainFrame.Show(); 

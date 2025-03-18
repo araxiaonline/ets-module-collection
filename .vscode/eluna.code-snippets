@@ -1,0 +1,1832 @@
+{
+  "Battleground Start": {
+    "prefix": "bg_start",
+    "body": [
+      "const $1: bg_event_on_start = (event: number, bg: BattleGround, bgId: BattleGroundTypeId, instanceId: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterBGEvent(BGEvents.BG_EVENT_ON_START, (...args) => $1(...args));"
+    ],
+    "description": "Battleground Event on Start",
+    "scope": "typescript"
+  },
+  "Battleground End": {
+    "prefix": "bg_end",
+    "body": [
+      "const $1: bg_event_on_end = (event: number, bg: BattleGround, bgId: BattleGroundTypeId, instanceId: number, winner: Team) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterBGEvent(BGEvents.BG_EVENT_ON_END, (...args) => $1(...args));"
+    ],
+    "description": "Battleground Event on End",
+    "scope": "typescript"
+  },
+  "Battleground Create": {
+    "prefix": "bg_create",
+    "body": [
+      "const $1: bg_event_on_create = (event: number, bg: BattleGround, bgId: BattleGroundTypeId, instanceId: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterBGEvent(BGEvents.BG_EVENT_ON_CREATE, (...args) => $1(...args));"
+    ],
+    "description": "Battleground Event on Create",
+    "scope": "typescript"
+  },
+  "Battleground Pre-Destroy": {
+    "prefix": "bg_pre_destroy",
+    "body": [
+      "const $1: bg_event_on_pre_destroy = (event: number, bg: BattleGround, bgId: BattleGroundTypeId, instanceId: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterBGEvent(BGEvents.BG_EVENT_ON_PRE_DESTROY, (...args) => $1(...args));"
+    ],
+    "description": "Battleground Event on Pre-Destroy",
+    "scope": "typescript"
+  },
+  "Creature Enter Combat": {
+    "prefix": "creature_enter_combat",
+    "body": [
+      "const $1: creature_event_on_enter_combat = (event: number, creature: Creature, target: Creature): boolean => {",
+      "\t// Implementation",
+      "\treturn false; // return true to stop normal action",
+      "};",
+      "",
+      "// Register Creature Event on Enter Combat",
+      "RegisterCreatureEvent(${2:MyCreatureEntry}, CreatureEvents.CREATURE_EVENT_ON_ENTER_COMBAT, (...args) => $1(...args));"
+    ],
+    "description": "Creature Enter Combat",
+    "scope": "typescript"
+  },
+  "Creature Leave Combat": {
+    "prefix": "creature_leave_combat",
+    "body": [
+      "const $1: creature_event_on_leave_combat = (event: number, creature: Creature): boolean => {",
+      "\t// Implementation",
+      "\treturn false; // return true to stop normal action",
+      "};",
+      "",
+      "// Register Creature Event on Leave Combat",
+      "RegisterCreatureEvent(${2:MyCreatureEntry}, CreatureEvents.CREATURE_EVENT_ON_LEAVE_COMBAT, (...args) => $1(...args));"
+    ],
+    "description": "Creature Leave Combat",
+    "scope": "typescript"
+  },
+  "Creature Target Died": {
+    "prefix": "creature_target_died",
+    "body": [
+      "const $1: creature_event_on_target_died = (event: number, creature: Creature, victim: Creature): boolean => {",
+      "\t// Implementation",
+      "\treturn false; // return true to stop normal action",
+      "};",
+      "",
+      "// Register Creature Event on Target Died",
+      "RegisterCreatureEvent(${2:MyCreatureEntry}, CreatureEvents.CREATURE_EVENT_ON_TARGET_DIED, (...args) => $1(...args));"
+    ],
+    "description": "Creature Target Died",
+    "scope": "typescript"
+  },
+  "Creature Died": {
+    "prefix": "creature_died",
+    "body": [
+      "const $1: creature_event_on_died = (event: number, creature: Creature, killer: Creature): boolean => {",
+      "\t// Implementation",
+      "\treturn false; // return true to stop normal action",
+      "};",
+      "",
+      "// Register Creature Event on Died",
+      "RegisterCreatureEvent(${2:MyCreatureEntry}, CreatureEvents.CREATURE_EVENT_ON_DIED, (...args) => $1(...args));"
+    ],
+    "description": "Creature Died",
+    "scope": "typescript"
+  },
+  "Creature Spawn": {
+    "prefix": "creature_spawn",
+    "body": [
+      "const $1: creature_event_on_spawn = (event: number, creature: Creature): boolean => {",
+      "\t// Implementation",
+      "\treturn false; // return true to stop normal action",
+      "};",
+      "",
+      "// Register Creature Event on Spawn",
+      "RegisterCreatureEvent(${2:MyCreatureEntry}, CreatureEvents.CREATURE_EVENT_ON_SPAWN, (...args) => $1(...args));"
+    ],
+    "description": "Creature Spawn",
+    "scope": "typescript"
+  },
+  "Creature Reach Waypoint": {
+    "prefix": "creature_reach_waypoint",
+    "body": [
+      "const $1: creature_event_on_reach_wp = (event: number, creature: Creature, type: number, id: number): boolean => {",
+      "\t// Implementation",
+      "\treturn false;",
+      "};",
+      "",
+      "// Register Creature Event on Reach Waypoint",
+      "RegisterCreatureEvent(${2:MyCreatureEntry}, CreatureEvents.CREATURE_EVENT_ON_REACH_WP, (...args) => $1(...args));"
+    ],
+    "description": "Creature Reach Waypoint",
+    "scope": "typescript"
+  },
+  "Creature AI Update": {
+    "prefix": "creature_ai_update",
+    "body": [
+      "const $1: creature_event_on_aiupdate = (event: number, creature: Creature, diff: number): boolean => {",
+      "\t// Implementation",
+      "\treturn false; // return true to stop normal action",
+      "};",
+      "",
+      "// Register Creature Event on AI Update",
+      "RegisterCreatureEvent(${2:MyCreatureEntry}, CreatureEvents.CREATURE_EVENT_ON_AIUPDATE, (...args) => $1(...args));"
+    ],
+    "description": "Creature AI Update",
+    "scope": "typescript"
+  },
+  "Creature Receive Emote": {
+    "prefix": "creature_receive_emote",
+    "body": [
+      "const $1: creature_event_on_receive_emote = (event: number, creature: Creature, player: Player, emoteId: number): boolean => {",
+      "\t// Implementation",
+      "\treturn false; // return true to stop normal action",
+      "};",
+      "",
+      "// Register Creature Event on Receive Emote",
+      "RegisterCreatureEvent(${2:MyCreatureEntry}, CreatureEvents.CREATURE_EVENT_ON_RECEIVE_EMOTE, (...args) => $1(...args));"
+    ],
+    "description": "Creature Receive Emote",
+    "scope": "typescript"
+  },
+  "Creature Damage Taken": {
+    "prefix": "creature_damage_taken",
+    "body": [
+      "const $1: creature_event_on_damage_taken = (event: number, creature: Creature, attacker: Creature, damage: number): boolean => {",
+      "\t// Implementation",
+      "\treturn false; // return true to stop normal action",
+      "};",
+      "",
+      "// Register Creature Event on Damage Taken",
+      "RegisterCreatureEvent(${2:MyCreatureEntry}, CreatureEvents.CREATURE_EVENT_ON_DAMAGE_TAKEN, (...args) => $1(...args));"
+    ],
+    "description": "Creature Damage Taken",
+    "scope": "typescript"
+  },
+  "Creature Pre Combat": {
+    "prefix": "creature_pre_combat",
+    "body": [
+      "const $1: creature_event_on_pre_combat = (event: number, creature: Creature, target: Creature): boolean => {",
+      "\t// Implementation",
+      "\treturn false; // return true to stop normal action",
+      "};",
+      "",
+      "// Register Creature Event on Pre Combat",
+      "RegisterCreatureEvent(${2:MyCreatureEntry}, CreatureEvents.CREATURE_EVENT_ON_PRE_COMBAT, (...args) => $1(...args));"
+    ],
+    "description": "Creature Pre Combat",
+    "scope": "typescript"
+  },
+  "Creature Hit By Spell": {
+    "prefix": "creature_hit_by_spell",
+    "body": [
+      "const $1: creature_event_on_hit_by_spell = (event: number, creature: Creature, caster: Creature, spellId: number): boolean => {",
+      "\t// Implementation",
+      "\treturn false; // return true to stop normal action",
+      "};",
+      "",
+      "// Register Creature Event on Hit By Spell",
+      "RegisterCreatureEvent(${2:MyCreatureEntry}, CreatureEvents.CREATURE_EVENT_ON_HIT_BY_SPELL, (...args) => $1(...args));"
+    ],
+    "description": "Creature Hit By Spell",
+    "scope": "typescript"
+  },
+  "Creature Owner Attacked": {
+    "prefix": "creature_owner_attacked",
+    "body": [
+      "const $1: creature_event_on_owner_attacked = (event: number, creature: Creature, target: Creature): boolean => {",
+      "\t// Implementation",
+      "\treturn false; // return true to stop normal action",
+      "};",
+      "",
+      "// Register Creature Event on Owner Attacked",
+      "RegisterCreatureEvent(${2:MyCreatureEntry}, CreatureEvents.CREATURE_EVENT_ON_OWNER_ATTACKED, (...args) => $1(...args));"
+    ],
+    "description": "Creature Owner Attacked",
+    "scope": "typescript"
+  },
+  "Creature Owner Attacked At": {
+    "prefix": "creature_owner_attacked_at",
+    "body": [
+      "const $1: creature_event_on_owner_attacked_at = (event: number, creature: Creature, attacker: Creature): boolean => {",
+      "\t// Implementation",
+      "\treturn false; // return true to stop normal action",
+      "};",
+      "",
+      "// Register Creature Event on Owner Attacked At",
+      "RegisterCreatureEvent(${2:MyCreatureEntry}, CreatureEvents.CREATURE_EVENT_ON_OWNER_ATTACKED_AT, (...args) => $1(...args));"
+    ],
+    "description": "Creature Owner Attacked At",
+    "scope": "typescript"
+  },
+  "Creature Spell Hit Target": {
+    "prefix": "creature_spell_hit_target",
+    "body": [
+      "const $1: creature_event_on_spell_hit_target = (event: number, creature: Creature, target: Creature, spellId: number): boolean => {",
+      "\t// Implementation",
+      "\treturn false; // return true to stop normal action",
+      "};",
+      "",
+      "// Register Creature Event on Spell Hit Target",
+      "RegisterCreatureEvent(${2:MyCreatureEntry}, CreatureEvents.CREATURE_EVENT_ON_SPELL_HIT_TARGET, (...args) => $1(...args));"
+    ],
+    "description": "Creature Spell Hit Target",
+    "scope": "typescript"
+  },
+  "Creature Just Summoned Creature": {
+    "prefix": "creature_just_summoned_creature",
+    "body": [
+      "const $1: creature_event_on_just_summoned_creature = (event: number, creature: Creature, summon: Creature): boolean => {",
+      "\t// Implementation",
+      "\treturn false; // return true to stop normal action",
+      "};",
+      "",
+      "// Register Creature Event on Just Summoned Creature",
+      "RegisterCreatureEvent(${2:MyCreatureEntry}, CreatureEvents.CREATURE_EVENT_ON_JUST_SUMMONED_CREATURE, (...args) => $1(...args));"
+    ],
+    "description": "Creature Just Summoned Creature",
+    "scope": "typescript"
+  },
+  "Creature Summoned Creature Despawn": {
+    "prefix": "creature_summoned_creature_despawn",
+    "body": [
+      "const $1: creature_event_on_summoned_creature_despawn = (event: number, creature: Creature, summon: Creature): boolean => {",
+      "\t// Implementation",
+      "\treturn false; // return true to stop normal action",
+      "};",
+      "",
+      "// Register Creature Event on Summoned Creature Despawn",
+      "RegisterCreatureEvent(${2:MyCreatureEntry}, CreatureEvents.CREATURE_EVENT_ON_SUMMONED_CREATURE_DESPAWN, (...args) => $1(...args));"
+    ],
+    "description": "Creature Summoned Creature Despawn",
+    "scope": "typescript"
+  },
+  "Creature Summoned Creature Died": {
+    "prefix": "creature_summoned_creature_died",
+    "body": [
+      "const $1: creature_event_on_summoned_creature_died = (event: number, creature: Creature, summon: Creature, killer: Creature): boolean => {",
+      "\t// Implementation",
+      "\treturn false; // return true to stop normal action",
+      "};",
+      "",
+      "// Register Creature Event on Summoned Creature Died",
+      "RegisterCreatureEvent(${2:MyCreatureEntry}, CreatureEvents.CREATURE_EVENT_ON_SUMMONED_CREATURE_DIED, (...args) => $1(...args));"
+    ],
+    "description": "Creature Summoned Creature Died",
+    "scope": "typescript"
+  },
+  "Creature Summoned": {
+    "prefix": "creature_summoned",
+    "body": [
+      "const $1: creature_event_on_summoned = (event: number, creature: Creature, summoner: Creature): boolean => {",
+      "\t// Implementation",
+      "\treturn false; // return true to stop normal action",
+      "};",
+      "",
+      "// Register Creature Event on Summoned",
+      "RegisterCreatureEvent(${2:MyCreatureEntry}, CreatureEvents.CREATURE_EVENT_ON_SUMMONED, (...args) => $1(...args));"
+    ],
+    "description": "Creature Summoned",
+    "scope": "typescript"
+  },
+  "Creature Reset": {
+    "prefix": "creature_reset",
+    "body": [
+      "const $1: creature_event_on_reset = (event: number, creature: Creature): boolean => {",
+      "\t// Implementation",
+      "\treturn false; // return true to stop normal action",
+      "};",
+      "",
+      "// Register Creature Event on Reset",
+      "RegisterCreatureEvent(${2:MyCreatureEntry}, CreatureEvents.CREATURE_EVENT_ON_RESET, (...args) => $1(...args));"
+    ],
+    "description": "Creature Reset",
+    "scope": "typescript"
+  },
+  "Creature Reach Home": {
+    "prefix": "creature_reach_home",
+    "body": [
+      "const $1: creature_event_on_reach_home = (event: number, creature: Creature): boolean => {",
+      "\t// Implementation",
+      "\treturn false; // return true to stop normal action",
+      "};",
+      "",
+      "// Register Creature Event on Reach Home",
+      "RegisterCreatureEvent(${2:MyCreatureEntry}, CreatureEvents.CREATURE_EVENT_ON_REACH_HOME, (...args) => $1(...args));"
+    ],
+    "description": "Creature Reach Home",
+    "scope": "typescript"
+  },
+  "Creature Corpse Removed": {
+    "prefix": "creature_corpse_removed",
+    "body": [
+      "const $1: creature_event_on_corpse_removed = (event: number, creature: Creature, respawnDelay: number): boolean => {",
+      "\t// Implementation",
+      "\treturn false; // return true to stop normal action",
+      "};",
+      "",
+      "// Register Creature Event on Corpse Removed",
+      "RegisterCreatureEvent(${2:MyCreatureEntry}, CreatureEvents.CREATURE_EVENT_ON_CORPSE_REMOVED, (...args) => $1(...args));"
+    ],
+    "description": "Creature Corpse Removed",
+    "scope": "typescript"
+  },
+  "Creature Move in Line of Sight": {
+    "prefix": "creature_move_in_los",
+    "body": [
+      "const $1: creature_event_on_move_in_los = (event: number, creature: Creature, unit: Unit): boolean => {",
+      "\t// Implementation",
+      "\treturn false; // return true to stop normal action",
+      "};",
+      "",
+      "// Register Creature Event on Move in Line of Sight",
+      "RegisterCreatureEvent(${2:MyCreatureEntry}, CreatureEvents.CREATURE_EVENT_ON_MOVE_IN_LOS, (...args) => $1(...args));"
+    ],
+    "description": "Creature Move in Line of Sight",
+    "scope": "typescript"
+  },
+  "Creature Dummy Effect": {
+    "prefix": "creature_dummy_effect",
+    "body": [
+      "const $1: creature_event_on_dummy_effect = (event: number, caster: Unit, spellId: number, effIndex: number, creature: Creature): boolean => {",
+      "\t// Implementation",
+      "\treturn false; // return true to stop normal action",
+      "};",
+      "",
+      "// Register Creature Event on Dummy Effect",
+      "RegisterCreatureEvent(${2:MyCreatureEntry}, CreatureEvents.CREATURE_EVENT_ON_DUMMY_EFFECT, (...args) => $1(...args));"
+    ],
+    "description": "Creature Dummy Effect",
+    "scope": "typescript"
+  },
+  "Creature Quest Accept": {
+    "prefix": "creature_quest_accept",
+    "body": [
+      "const $1: creature_event_on_quest_accept = (event: number, player: Player, creature: Creature, quest: Quest): boolean => {",
+      "\t// Implementation",
+      "\treturn false; // return true to stop normal action",
+      "};",
+      "",
+      "// Register Creature Event on Quest Accept",
+      "RegisterCreatureEvent(${2:MyCreatureEntry}, CreatureEvents.CREATURE_EVENT_ON_QUEST_ACCEPT, (...args) => $1(...args));"
+    ],
+    "description": "Creature Quest Accept",
+    "scope": "typescript"
+  },
+  "Creature Quest Reward": {
+    "prefix": "creature_quest_reward",
+    "body": [
+      "const $1: creature_event_on_quest_reward = (event: number, player: Player, creature: Creature, quest: Quest, opt: number): boolean => {",
+      "\t// Implementation",
+      "\treturn false; // return true to stop normal action",
+      "};",
+      "",
+      "// Register Creature Event on Quest Reward",
+      "RegisterCreatureEvent(${2:MyCreatureEntry}, CreatureEvents.CREATURE_EVENT_ON_QUEST_REWARD, (...args) => $1(...args));"
+    ],
+    "description": "Creature Quest Reward",
+    "scope": "typescript"
+  },
+  "Creature Dialog Status": {
+    "prefix": "creature_dialog_status",
+    "body": [
+      "const $1: creature_event_on_dialog_status = (event: number, player: Player, creature: Creature): boolean => {",
+      "\t// Implementation",
+      "\treturn false; // return true to stop normal action",
+      "};",
+      "",
+      "// Register Creature Event on Dialog Status",
+      "RegisterCreatureEvent(${2:MyCreatureEntry}, CreatureEvents.CREATURE_EVENT_ON_DIALOG_STATUS, (...args) => $1(...args));"
+    ],
+    "description": "Creature Dialog Status",
+    "scope": "typescript"
+  },
+  "Creature Add": {
+    "prefix": "creature_add",
+    "body": [
+      "const $1: creature_event_on_add = (event: number, creature: Creature): boolean => {",
+      "\t// Implementation",
+      "\treturn false; // return true to stop normal action",
+      "};",
+      "",
+      "// Register Creature Event on Add",
+      "RegisterCreatureEvent(${2:MyCreatureEntry}, CreatureEvents.CREATURE_EVENT_ON_ADD, (...args) => $1(...args));"
+    ],
+    "description": "Creature Add",
+    "scope": "typescript"
+  },
+  "Creature Remove": {
+    "prefix": "creature_remove",
+    "body": [
+      "const $1: creature_event_on_remove = (event: number, creature: Creature): boolean => {",
+      "\t// Implementation",
+      "\treturn false; // return true to stop normal action",
+      "};",
+      "",
+      "// Register Creature Event on Remove",
+      "RegisterCreatureEvent(${2:MyCreatureEntry}, CreatureEvents.CREATURE_EVENT_ON_REMOVE, (...args) => $1(...args));"
+    ],
+    "description": "Creature Remove",
+    "scope": "typescript"
+  },
+  "GameObject AI Update": {
+    "prefix": "gameobject_on_aiupdate",
+    "body": [
+      "const $1: gameobject_event_on_aiupdate = (event: number, gameObject: GameObject, diff: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register GameObject Event on AI Update",
+      "RegisterGameObjectEvent(${2:MyGameObjectID},GameObjectEvents.GAMEOBJECT_EVENT_ON_AIUPDATE, (...args) => $1(...args));"
+    ],
+    "description": "GameObject AI Update",
+    "scope": "typescript"
+  },
+  "GameObject Spawn": {
+    "prefix": "gameobject_on_spawn",
+    "body": [
+      "const $1: gameobject_event_on_spawn = (event: number, gameObject: GameObject) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register GameObject Event on Spawn",
+      "RegisterGameObjectEvent(${2:MyGameObjectID},GameObjectEvents.GAMEOBJECT_EVENT_ON_SPAWN, (...args) => $1(...args));"
+    ],
+    "description": "GameObject Spawn",
+    "scope": "typescript"
+  },
+  "GameObject Dummy Effect": {
+    "prefix": "gameobject_on_dummy_effect",
+    "body": [
+      "const $1: gameobject_event_on_dummy_effect = (event: number, caster: any, spellId: number, effectIndex: number, gameObject: GameObject): boolean => {",
+      "\t// Implementation",
+      "\treturn false;",
+      "};",
+      "",
+      "// Register GameObject Event on Dummy Effect",
+      "RegisterGameObjectEvent(${2:MyGameObjectID},GameObjectEvents.GAMEOBJECT_EVENT_ON_DUMMY_EFFECT, (...args) => $1(...args));"
+    ],
+    "description": "GameObject Dummy Effect",
+    "scope": "typescript"
+  },
+  "GameObject Quest Accept": {
+    "prefix": "gameobject_on_quest_accept",
+    "body": [
+      "const $1: gameobject_event_on_quest_accept = (event: number, player: Player, gameObject: GameObject, quest: any): boolean => {",
+      "\t// Implementation",
+      "\treturn false;",
+      "};",
+      "",
+      "// Register GameObject Event on Quest Accept",
+      "RegisterGameObjectEvent(${2:MyGameObjectID},GameObjectEvents.GAMEOBJECT_EVENT_ON_QUEST_ACCEPT, (...args) => $1(...args));"
+    ],
+    "description": "GameObject Quest Accept",
+    "scope": "typescript"
+  },
+  "GameObject Quest Reward": {
+    "prefix": "gameobject_on_quest_reward",
+    "body": [
+      "const $1: gameobject_event_on_quest_reward = (event: number, player: Player, gameObject: GameObject, quest: any, option: any): boolean => {",
+      "\t// Implementation",
+      "\treturn false;",
+      "};",
+      "",
+      "// Register GameObject Event on Quest Reward",
+      "RegisterGameObjectEvent(${2:MyGameObjectID},GameObjectEvents.GAMEOBJECT_EVENT_ON_QUEST_REWARD, (...args) => $1(...args));"
+    ],
+    "description": "GameObject Quest Reward",
+    "scope": "typescript"
+  },
+  "GameObject Dialog Status": {
+    "prefix": "gameobject_on_dialog_status",
+    "body": [
+      "const $1: gameobject_event_on_dialog_status = (event: number, player: Player, gameObject: GameObject) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register GameObject Event on Dialog Status",
+      "RegisterGameObjectEvent(${2:MyGameObjectID},GameObjectEvents.GAMEOBJECT_EVENT_ON_DIALOG_STATUS, (...args) => $1(...args));"
+    ],
+    "description": "GameObject Dialog Status",
+    "scope": "typescript"
+  },
+  "GameObject Destroyed": {
+    "prefix": "gameobject_on_destroyed",
+    "body": [
+      "const $1: gameobject_event_on_destroyed = (event: number, gameObject: GameObject, attacker: any) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register GameObject Event on Destroyed",
+      "RegisterGameObjectEvent(${2:MyGameObjectID},GameObjectEvents.GAMEOBJECT_EVENT_ON_DESTROYED, (...args) => $1(...args));"
+    ],
+    "description": "GameObject Destroyed",
+    "scope": "typescript"
+  },
+  "GameObject Damaged": {
+    "prefix": "gameobject_on_damaged",
+    "body": [
+      "const $1: gameobject_event_on_damaged = (event: number, gameObject: GameObject, attacker: any) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register GameObject Event on Damaged",
+      "RegisterGameObjectEvent(${2:MyGameObjectID},GameObjectEvents.GAMEOBJECT_EVENT_ON_DAMAGED, (...args) => $1(...args));"
+    ],
+    "description": "GameObject Damaged",
+    "scope": "typescript"
+  },
+  "GameObject Loot State Change": {
+    "prefix": "gameobject_on_loot_state_change",
+    "body": [
+      "const $1: gameobject_event_on_loot_state_change = (event: number, gameObject: GameObject, state: any) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register GameObject Event on Loot State Change",
+      "RegisterGameObjectEvent(${2:MyGameObjectID},GameObjectEvents.GAMEOBJECT_EVENT_ON_LOOT_STATE_CHANGE, (...args) => $1(...args));"
+    ],
+    "description": "GameObject Loot State Change",
+    "scope": "typescript"
+  },
+  "GameObject State Changed": {
+    "prefix": "gameobject_on_state_changed",
+    "body": [
+      "const $1: gameobject_event_on_go_state_changed = (event: number, gameObject: GameObject, state: any) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register GameObject Event on State Changed",
+      "RegisterGameObjectEvent(${2:MyGameObjectID},GameObjectEvents.GAMEOBJECT_EVENT_ON_GO_STATE_CHANGED, (...args) => $1(...args));"
+    ],
+    "description": "GameObject State Changed",
+    "scope": "typescript"
+  },
+  "GameObject Add": {
+    "prefix": "gameobject_on_add",
+    "body": [
+      "const $1: gameobject_event_on_add = (event: number, gameObject: GameObject) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register GameObject Event on Add",
+      "RegisterGameObjectEvent(${2:MyGameObjectID},GameObjectEvents.GAMEOBJECT_EVENT_ON_ADD, (...args) => $1(...args));"
+    ],
+    "description": "GameObject Add",
+    "scope": "typescript"
+  },
+  "GameObject Remove": {
+    "prefix": "gameobject_on_remove",
+    "body": [
+      "const $1: gameobject_event_on_remove = (event: number, gameObject: GameObject) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register GameObject Event on Remove",
+      "RegisterGameObjectEvent(${2:MyGameObjectID},GameObjectEvents.GAMEOBJECT_EVENT_ON_REMOVE, (...args) => $1(...args));"
+    ],
+    "description": "GameObject Remove",
+    "scope": "typescript"
+  },
+  "GameObject Use": {
+    "prefix": "gameobject_on_use",
+    "body": [
+      "const $1: gameobject_event_on_use = (event: number, gameObject: GameObject, player: Player): boolean => {",
+      "\t// Implementation",
+      "\treturn false;",
+      "};",
+      "",
+      "// Register GameObject Event on Use",
+      "RegisterGameObjectEvent(${2:MyGameObjectID},GameObjectEvents.GAMEOBJECT_EVENT_ON_USE, (...args) => $1(...args));"
+    ],
+    "description": "GameObject Use",
+    "scope": "typescript"
+  },
+  "Item Gossip Hello": {
+    "prefix": "item_gossip_on_hello",
+    "body": [
+      "const $1: gossip_event_on_hello = (event: number, player: Player, item: Item): boolean => {",
+      "\t// Implementation",
+      "\treturn true;",
+      "};",
+      "",
+      "// Register Item Gossip Event on Hello",
+      "RegisterItemGossipEvent(${2:MyItemEntry}, GossipEvents.GOSSIP_EVENT_ON_HELLO, (...args) => $1(...args));"
+    ],
+    "description": "Item Gossip Hello",
+    "scope": "typescript"
+  },
+  "Item Gossip Select": {
+    "prefix": "item_gossip_on_select",
+    "body": [
+      "const $1: gossip_event_on_select = (event: number, player: Player, item: Item, sender: number, intid: number, code: string, menuId?: number): boolean => {",
+      "\t// Implementation",
+      "\treturn true;",
+      "};",
+      "",
+      "// Register Item Gossip Event on Select",
+      "RegisterItemGossipEvent(${2:MyItemEntry}, GossipEvents.GOSSIP_EVENT_ON_SELECT, (...args) => $1(...args));"
+    ],
+    "description": "Item Gossip Select",
+    "scope": "typescript"
+  },
+  "Player Gossip Hello": {
+    "prefix": "player_gossip_on_hello",
+    "body": [
+      "const $1: gossip_event_on_hello = (event: number, player: Player, object: Object): boolean => {",
+      "\t// Implementation",
+      "\treturn true;",
+      "};",
+      "",
+      "// Register Player Gossip Event on Hello",
+      "RegisterPlayerGossipEvent(${2:MyMenuId}, GossipEvents.GOSSIP_EVENT_ON_HELLO, (...args) => $1(...args));"
+    ],
+    "description": "Player Gossip Hello",
+    "scope": "typescript"
+  },
+  "Player Gossip Select": {
+    "prefix": "player_gossip_on_select",
+    "body": [
+      "const $1: gossip_event_on_select = (event: number, player: Player, object: Object, sender: number, intid: number, code: string, menuId?: number): boolean => {",
+      "\t// Implementation",
+      "\treturn true;",
+      "};",
+      "",
+      "// Register Player Gossip Event on Select",
+      "RegisterItemGossipEvent(${2:MyMenuId}, GossipEvents.GOSSIP_EVENT_ON_SELECT, (...args) => $1(...args));"
+    ],
+    "description": "Player Gossip Select",
+    "scope": "typescript"
+  },
+  "GameObject Gossip Hello": {
+    "prefix": "gameobject_gossip_on_hello",
+    "body": [
+      "const $1: gossip_event_on_hello = (event: number, player: Player, gameObject: GameObject): boolean => {",
+      "\t// Implementation",
+      "\treturn true;",
+      "};",
+      "",
+      "// Register GameObject Gossip Event on Hello",
+      "RegisterGameObjectGossipEvent(${2:MyGameObjectEntry}, GossipEvents.GOSSIP_EVENT_ON_HELLO, (...args) => $1(...args));"
+    ],
+    "description": "GameObject Gossip Hello",
+    "scope": "typescript"
+  },
+  "GameObject Gossip Select": {
+    "prefix": "gameobject_gossip_on_select",
+    "body": [
+      "const $1: gossip_event_on_select = (event: number, player: Player, gameObject: GameObject, sender: number, intid: number, code: string, menuId?: number): boolean => {",
+      "\t// Implementation",
+      "\treturn true;",
+      "};",
+      "",
+      "// Register GameObject Gossip Event on Select",
+      "RegisterGameObjectGossipEvent(${2:MyGameObjectEntry}, GossipEvents.GOSSIP_EVENT_ON_SELECT, (...args) => $1(...args));"
+    ],
+    "description": "GameObject Gossip Select",
+    "scope": "typescript"
+  },
+  "Creature Gossip Hello": {
+    "prefix": "creature_gossip_on_hello",
+    "body": [
+      "const $1: gossip_event_on_hello = (event: number, player: Player, creature: Creature): boolean => {",
+      "\t// Implementation",
+      "\treturn true;",
+      "};",
+      "",
+      "// Register Creature Gossip Event on Hello",
+      "RegisterCreatureGossipEvent(${2:MyCreatureEntry}, GossipEvents.GOSSIP_EVENT_ON_HELLO, (...args) => $1(...args));"
+    ],
+    "description": "Creature Gossip Hello",
+    "scope": "typescript"
+  },
+  "Creature Gossip Select": {
+    "prefix": "creature_gossip_on_select",
+    "body": [
+      "const $1: gossip_event_on_select = (event: number, player: Player, creature: Creature, sender: number, intid: number, code: string, menuId?: number): boolean => {",
+      "\t// Implementation",
+      "\treturn true;",
+      "};",
+      "",
+      "// Register Creature Gossip Event on Select",
+      "RegisterCreatureGossipEvent(${2:MyCreatureEntry}, GossipEvents.GOSSIP_EVENT_ON_SELECT, (...args) => $1(...args));"
+    ],
+    "description": "Creature Gossip Select",
+    "scope": "typescript"
+  },
+  "Group Member Add": {
+    "prefix": "group_member_add",
+    "body": [
+      "const $1: group_event_on_member_add = (event: number, group: Group, guid: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterGroupEvent(GroupEvents.GROUP_EVENT_ON_MEMBER_ADD, (...args) => $1(...args));"
+    ],
+    "description": "Group Event on Member Add",
+    "scope": "typescript"
+  },
+  "Group Member Invite": {
+    "prefix": "group_member_invite",
+    "body": [
+      "const $1: group_event_on_member_invite = (event: number, group: Group, guid: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterGroupEvent(GroupEvents.GROUP_EVENT_ON_MEMBER_INVITE, (...args) => $1(...args));"
+    ],
+    "description": "Group Event on Member Invite",
+    "scope": "typescript"
+  },
+  "Group Member Remove": {
+    "prefix": "group_member_remove",
+    "body": [
+      "const $1: group_event_on_member_remove = (event: number, group: Group, guid: number, method: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterGroupEvent(GroupEvents.GROUP_EVENT_ON_MEMBER_REMOVE, (...args) => $1(...args));"
+    ],
+    "description": "Group Event on Member Remove",
+    "scope": "typescript"
+  },
+  "Group Leader Change": {
+    "prefix": "group_leader_change",
+    "body": [
+      "const $1: group_event_on_leader_change = (event: number, group: Group, newLeaderGuid: number, oldLeaderGuid: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterGroupEvent(GroupEvents.GROUP_EVENT_ON_LEADER_CHANGE, (...args) => $1(...args));"
+    ],
+    "description": "Group Event on Leader Change",
+    "scope": "typescript"
+  },
+  "Group Disband": {
+    "prefix": "group_disband",
+    "body": [
+      "const $1: group_event_on_disband = (event: number, group: Group) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterGroupEvent(GroupEvents.GROUP_EVENT_ON_DISBAND, (...args) => $1(...args));"
+    ],
+    "description": "Group Event on Disband",
+    "scope": "typescript"
+  },
+  "Group Create": {
+    "prefix": "group_create",
+    "body": [
+      "const $1: group_event_on_create = (event: number, group: Group, leaderGuid: number, groupType: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterGroupEvent(GroupEvents.GROUP_EVENT_ON_CREATE, (...args) => $1(...args));"
+    ],
+    "description": "Group Event on Create",
+    "scope": "typescript"
+  },
+  "Guild Add Member": {
+    "prefix": "guild_add_member",
+    "body": [
+      "const $1: guild_event_on_add_member = (event: number, guild: Guild, player: Player, rank: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterGuildEvent(GuildEvents.GUILD_EVENT_ON_ADD_MEMBER, (...args) => $1(...args));"
+    ],
+    "description": "Guild Event on Add Member",
+    "scope": "typescript"
+  },
+  "Guild Remove Member": {
+    "prefix": "guild_remove_member",
+    "body": [
+      "const $1: guild_event_on_remove_member = (event: number, guild: Guild, player: Player, isDisbanding: boolean) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterGuildEvent(GuildEvents.GUILD_EVENT_ON_REMOVE_MEMBER, (...args) => $1(...args));"
+    ],
+    "description": "Guild Event on Remove Member",
+    "scope": "typescript"
+  },
+  "Guild MOTD Change": {
+    "prefix": "guild_motd_change",
+    "body": [
+      "const $1: guild_event_on_motd_change = (event: number, guild: Guild, newMotd: string) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterGuildEvent(GuildEvents.GUILD_EVENT_ON_MOTD_CHANGE, (...args) => $1(...args));"
+    ],
+    "description": "Guild Event on MOTD Change",
+    "scope": "typescript"
+  },
+  "Guild Info Change": {
+    "prefix": "guild_info_change",
+    "body": [
+      "const $1: guild_event_on_info_change = (event: number, guild: Guild, newInfo: string) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterGuildEvent(GuildEvents.GUILD_EVENT_ON_INFO_CHANGE, (...args) => $1(...args));"
+    ],
+    "description": "Guild Event on Info Change",
+    "scope": "typescript"
+  },
+  "Guild Create": {
+    "prefix": "guild_create",
+    "body": [
+      "const $1: guild_event_on_create = (event: number, guild: Guild, leader: Player, name: string) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterGuildEvent(GuildEvents.GUILD_EVENT_ON_CREATE, (...args) => $1(...args));"
+    ],
+    "description": "Guild Event on Create",
+    "scope": "typescript"
+  },
+  "Guild Disband": {
+    "prefix": "guild_disband",
+    "body": [
+      "const $1: guild_event_on_disband = (event: number, guild: Guild) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterGuildEvent(GuildEvents.GUILD_EVENT_ON_DISBAND, (...args) => $1(...args));"
+    ],
+    "description": "Guild Event on Disband",
+    "scope": "typescript"
+  },
+  "Guild Money Withdraw": {
+    "prefix": "guild_money_withdraw",
+    "body": [
+      "const $1: guild_event_on_money_withdraw = (event: number, guild: Guild, player: Player, amount: number, isRepair: boolean) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterGuildEvent(GuildEvents.GUILD_EVENT_ON_MONEY_WITHDRAW, (...args) => $1(...args));"
+    ],
+    "description": "Guild Event on Money Withdraw",
+    "scope": "typescript"
+  },
+  "Guild Money Deposit": {
+    "prefix": "guild_money_deposit",
+    "body": [
+      "const $1: guild_event_on_money_deposit = (event: number, guild: Guild, player: Player, amount: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterGuildEvent(GuildEvents.GUILD_EVENT_ON_MONEY_DEPOSIT, (...args) => $1(...args));"
+    ],
+    "description": "Guild Event on Money Deposit",
+    "scope": "typescript"
+  },
+  "Guild Item Move": {
+    "prefix": "guild_item_move",
+    "body": [
+      "const $1: guild_event_on_item_move = (event: number, guild: Guild, player: Player, item: Item, isSrcBank: boolean, srcContainer: number, srcSlotId: number, isDestBank: boolean, destContainer: number, destSlotId: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterGuildEvent(GuildEvents.GUILD_EVENT_ON_ITEM_MOVE, (...args) => $1(...args));"
+    ],
+    "description": "Guild Event on Item Move",
+    "scope": "typescript"
+  },
+  "Guild Event": {
+    "prefix": "guild_event",
+    "body": [
+      "const $1: guild_event_on_event = (event: number, guild: Guild, eventType: number, plrGUIDLow1: number, plrGUIDLow2: number, newRank: GuildRank) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterGuildEvent(GuildEvents.GUILD_EVENT_ON_EVENT, (...args) => $1(...args));"
+    ],
+    "description": "Guild Event on Event",
+    "scope": "typescript"
+  },
+  "Guild Bank Event": {
+    "prefix": "guild_bank_event",
+    "body": [
+      "const $1: guild_event_on_bank_event = (event: number, guild: Guild, eventType: number, tabId: number, playerGUIDLow: number, itemOrMoney: number, itemStackCount: number, destTabId: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterGuildEvent(GuildEvents.GUILD_EVENT_ON_BANK_EVENT, (...args) => $1(...args));"
+    ],
+    "description": "Guild Event on Bank Event",
+    "scope": "typescript"
+  },
+  "Instance Initialize": {
+    "prefix": "instance_initialize",
+    "body": [
+      "const $1: instance_event_on_initialize = (event: number, instanceData: number[], map: EMap) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterMapEvent($2, InstanceEvents.INSTANCE_EVENT_ON_INITIALIZE, (...args) => $1(...args));"
+    ],
+    "description": "Instance Event on Initialize",
+    "scope": "typescript"
+  },
+  "Instance Load": {
+    "prefix": "instance_load",
+    "body": [
+      "const $1: instance_event_on_load = (event: number, instanceData: number[], map: EMap) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterMapEvent($2, InstanceEvents.INSTANCE_EVENT_ON_LOAD, (...args) => $1(...args));"
+    ],
+    "description": "Instance Event on Load",
+    "scope": "typescript"
+  },
+  "Instance Update": {
+    "prefix": "instance_update",
+    "body": [
+      "const $1: instance_event_on_update = (event: number, instanceData: number[], map: EMap, diff: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterMapEvent($2, InstanceEvents.INSTANCE_EVENT_ON_UPDATE, (...args) => $1(...args));"
+    ],
+    "description": "Instance Event on Update",
+    "scope": "typescript"
+  },
+  "Instance Player Enter": {
+    "prefix": "instance_player_enter",
+    "body": [
+      "const $1: instance_event_on_player_enter = (event: number, instanceData: number[], map: EMap, player: Player) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterMapEvent($2, InstanceEvents.INSTANCE_EVENT_ON_PLAYER_ENTER, (...args) => $1(...args));"
+    ],
+    "description": "Instance Event on Player Enter",
+    "scope": "typescript"
+  },
+  "Instance Creature Create": {
+    "prefix": "instance_creature_create",
+    "body": [
+      "const $1: instance_event_on_creature_create = (event: number, instanceData: number[], map: EMap, creature: Creature) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterMapEvent($2, InstanceEvents.INSTANCE_EVENT_ON_CREATURE_CREATE, (...args) => $1(...args));"
+    ],
+    "description": "Instance Event on Creature Create",
+    "scope": "typescript"
+  },
+  "Instance GameObject Create": {
+    "prefix": "instance_gameobject_create",
+    "body": [
+      "const $1: instance_event_on_gameobject_create = (event: number, instanceData: number[], map: EMap, gameObject: GameObject) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterMapEvent($2, InstanceEvents.INSTANCE_EVENT_ON_GAMEOBJECT_CREATE, (...args) => $1(...args));"
+    ],
+    "description": "Instance Event on GameObject Create",
+    "scope": "typescript"
+  },
+  "Instance Check Encounter in Progress": {
+    "prefix": "instance_check_encounter_in_progress",
+    "body": [
+      "const $1: instance_event_on_check_encounter_in_progress = (event: number, instanceData: number[], map: EMap): boolean => {",
+      "\t// Implementation",
+      "\treturn true;",
+      "};",
+      "",
+      "// Register",
+      "RegisterMapEvent($2, InstanceEvents.INSTANCE_EVENT_ON_CHECK_ENCOUNTER_IN_PROGRESS, (...args) => $1(...args));"
+    ],
+    "description": "Instance Event on Check Encounter in Progress",
+    "scope": "typescript"
+  },
+  "Item Dummy Effect": {
+    "prefix": "item_dummy_effect",
+    "body": [
+      "const $1: item_event_on_dummy_effect = (event: number, caster: Player, spellId: number, effIndex: number, item: Item) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterItemEvent($2, ItemEvents.ITEM_EVENT_ON_DUMMY_EFFECT, (...args) => $1(...args));"
+    ],
+    "description": "Item Event on Dummy Effect",
+    "scope": "typescript"
+  },
+  "Item Use": {
+    "prefix": "item_use",
+    "body": [
+      "const $1: item_event_on_use = (event: number, player: Player, item: Item, target: Unit): boolean => {",
+      "\t// Implementation",
+      "\treturn true; // Return false to stop the spell casting",
+      "};",
+      "",
+      "// Register",
+      "RegisterItemEvent($2, ItemEvents.ITEM_EVENT_ON_USE, (...args) => $1(...args));"
+    ],
+    "description": "Item Event on Use",
+    "scope": "typescript"
+  },
+  "Item Quest Accept": {
+    "prefix": "item_quest_accept",
+    "body": [
+      "const $1: item_event_on_quest_accept = (event: number, player: Player, item: Item, quest: Quest): boolean => {",
+      "\t// Implementation",
+      "\treturn false; // Returning true will stop the action from happening",
+      "};",
+      "",
+      "// Register",
+      "RegisterItemEvent($2, ItemEvents.ITEM_EVENT_ON_QUEST_ACCEPT, (...args) => $1(...args));"
+    ],
+    "description": "Item Event on Quest Accept",
+    "scope": "typescript"
+  },
+  "Item Expire": {
+    "prefix": "item_expire",
+    "body": [
+      "const $1: item_event_on_expire = (event: number, player: Player, itemId: number): boolean => {",
+      "\t// Implementation",
+      "\treturn false; // Returning true will stop the action from happening",
+      "};",
+      "",
+      "// Register",
+      "RegisterItemEvent($2, ItemEvents.ITEM_EVENT_ON_EXPIRE, (...args) => $1(...args));"
+    ],
+    "description": "Item Event on Expire",
+    "scope": "typescript"
+  },
+  "Item Remove": {
+    "prefix": "item_remove",
+    "body": [
+      "const $1: item_event_on_remove = (event: number, player: Player, item: Item): boolean => {",
+      "\t// Implementation",
+      "\treturn false; // Returning true will stop the action from happening",
+      "};",
+      "",
+      "// Register",
+      "RegisterItemEvent($2, ItemEvents.ITEM_EVENT_ON_REMOVE, (...args) => $1(...args));"
+    ],
+    "description": "Item Event on Remove",
+    "scope": "typescript"
+  },
+  "Character Create": {
+    "prefix": "player_character_create",
+    "body": [
+      "const $1: player_event_on_character_create = (event: number, player: Player) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_CHARACTER_CREATE, (...args) => $1(...args));"
+    ],
+    "description": "Player Event on Character Create",
+    "scope": "typescript"
+  },
+  "Character Delete": {
+    "prefix": "player_character_delete",
+    "body": [
+      "const $1: player_event_on_character_delete = (event: number, guid: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_CHARACTER_DELETE, (...args) => $1(...args));"
+    ],
+    "description": "Player Event on Character Delete",
+    "scope": "typescript"
+  },
+  "Login": {
+    "prefix": "player_login",
+    "body": [
+      "const $1: player_event_on_login = (event: number, player: Player) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_LOGIN, (...args) => $1(...args));"
+    ],
+    "description": "Player Event on Login",
+    "scope": "typescript"
+  },
+  "Logout": {
+    "prefix": "player_logout",
+    "body": [
+      "const $1: player_event_on_logout = (event: number, player: Player) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_LOGOUT, (...args) => $1(...args));"
+    ],
+    "description": "Player Event on Logout",
+    "scope": "typescript"
+  },
+  "Spell Cast": {
+    "prefix": "player_spell_cast",
+    "body": [
+      "const $1: player_event_on_spell_cast = (event: number, player: Player, spell: Spell, skipCheck: boolean) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_SPELL_CAST, (...args) => $1(...args));"
+    ],
+    "description": "Player Event on Spell Cast",
+    "scope": "typescript"
+  },
+  "Kill Player": {
+    "prefix": "player_kill_player",
+    "body": [
+      "const $1: player_event_on_kill_player = (event: number, killer: Player, killed: Player) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_KILL_PLAYER, (...args) => $1(...args));"
+    ],
+    "description": "Player Event on Kill Player",
+    "scope": "typescript"
+  },
+  "Kill Creature": {
+    "prefix": "player_kill_creature",
+    "body": [
+      "const $1: player_event_on_kill_creature = (event: number, killer: Player, killed: Creature) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_KILL_CREATURE, (...args) => $1(...args));"
+    ],
+    "description": "Player Event on Kill Creature",
+    "scope": "typescript"
+  },
+  "Killed by Creature": {
+    "prefix": "player_killed_by_creature",
+    "body": [
+      "const $1: player_event_on_killed_by_creature = (event: number, killer: Creature, killed: Player) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_KILLED_BY_CREATURE, (...args) => $1(...args));"
+    ],
+    "description": "Player Event on Killed by Creature",
+    "scope": "typescript"
+  },
+  "Duel Request": {
+    "prefix": "player_duel_request",
+    "body": [
+      "const $1: player_event_on_duel_request = (event: number, target: Player, challenger: Player) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_DUEL_REQUEST, (...args) => $1(...args));"
+    ],
+    "description": "Player Event on Duel Request",
+    "scope": "typescript"
+  },
+  "Duel Start": {
+    "prefix": "player_duel_start",
+    "body": [
+      "const $1: player_event_on_duel_start = (event: number, starter: Player, challenger: Player) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_DUEL_START, (...args) => $1(...args));"
+    ],
+    "description": "Player Event on Duel Start",
+    "scope": "typescript"
+  },
+  "Duel End": {
+    "prefix": "player_duel_end",
+    "body": [
+      "const $1: player_event_on_duel_end = (event: number, winner: Player, loser: Player, type: DuelCompleteType) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_DUEL_END, (...args) => $1(...args));"
+    ],
+    "description": "Player Event on Duel End",
+    "scope": "typescript"
+  },
+  "Give XP": {
+    "prefix": "player_give_xp",
+    "body": [
+      "const $1: player_event_on_give_xp = (event: number, player: Player, amount: number, victim: Player) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_GIVE_XP, (...args) => $1(...args));"
+    ],
+    "description": "Player Event on Give XP",
+    "scope": "typescript"
+  },
+  "Level Change": {
+    "prefix": "player_level_change",
+    "body": [
+      "const $1: player_event_on_level_change = (event: number, player: Player, oldLevel: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_LEVEL_CHANGE, (...args) => $1(...args));"
+    ],
+    "description": "Player Event on Level Change",
+    "scope": "typescript"
+  },
+  "Money Change": {
+    "prefix": "player_money_change",
+    "body": [
+      "const $1: player_event_on_money_change = (event: number, player: Player, amount: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_MONEY_CHANGE, (...args) => $1(...args));"
+    ],
+    "description": "Player Event on Money Change",
+    "scope": "typescript"
+  },
+  "Reputation Change": {
+    "prefix": "player_reputation_change",
+    "body": [
+      "const $1: player_event_on_reputation_change = (event: number, player: Player, factionId: number, standing: number, incremental: boolean) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_REPUTATION_CHANGE, (...args) => $1(...args));"
+    ],
+    "description": "Player Event on Reputation Change",
+    "scope": "typescript"
+  },
+  "Talents Change": {
+    "prefix": "player_talents_change",
+    "body": [
+      "const $1: player_event_on_talents_change = (event: number, player: Player, points: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_TALENTS_CHANGE, (...args) => $1(...args));"
+    ],
+    "description": "Player Event on Talents Change",
+    "scope": "typescript"
+  },
+  "Talents Reset": {
+    "prefix": "player_talents_reset",
+    "body": [
+      "const $1: player_event_on_talents_reset = (event: number, player: Player, noCost: boolean) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_TALENTS_RESET, (...args) => $1(...args));"
+    ],
+    "description": "Player Event on Talents Reset",
+    "scope": "typescript"
+  },
+  "Chat": {
+    "prefix": "player_chat",
+    "body": [
+      "const $1: player_event_on_chat = (event: number, player: Player, msg: string, Type: ChatMsg, lang: Language): string | boolean => {",
+      "\t// Implementation",
+      "\treturn '' // Return a string to override the message, or return nothing to keep the original message;",
+      "\treturn false // Return false to block the message, or return true to allow the message;",
+      "};",
+      "",
+      "// Register",
+      "RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_CHAT, (...args) => $1(...args));"
+    ],
+    "description": "Player Event on Chat",
+    "scope": "typescript"
+  },
+  "Whisper": {
+    "prefix": "player_whisper",
+    "body": [
+      "const $1: player_event_on_whisper = (event: number, player: Player, msg: string, Type: ChatMsg, lang: Language, receiver: Player): string | boolean => {",
+      "\t// Implementation",
+      "\treturn '' // Return a string to override the message, or return nothing to keep the original message;",
+      "\treturn false // Return false to block the message, or return true to allow the message;",
+      "};",
+      "",
+      "// Register",
+      "RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_WHISPER, (...args) => $1(...args));"
+    ],
+    "description": "Player Event on Whisper",
+    "scope": "typescript"
+  },
+  "Group Chat": {
+    "prefix": "player_group_chat",
+    "body": [
+      "const $1: player_event_on_group_chat = (event: number, player: Player, msg: string, Type: ChatMsg, lang: Language, group: Group): string | boolean => {",
+      "\t// Implementation",
+      "\treturn '' // Return a string to override the message, or return nothing to keep the original message;",
+      "\treturn false // Return false to block the message, or return true to allow the message;",
+      "};",
+      "",
+      "// Register",
+      "RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_GROUP_CHAT, (...args) => $1(...args));"
+    ],
+    "description": "Player Event on Group Chat",
+    "scope": "typescript"
+  },
+  "Guild Chat": {
+    "prefix": "player_guild_chat",
+    "body": [
+      "const $1: player_event_on_guild_chat = (event: number, player: Player, msg: string, Type: ChatMsg, lang: Language, guild: Guild): string | boolean => {",
+      "\t// Implementation",
+      "\treturn '' // Return a string to override the message, or return nothing to keep the original message;",
+      "\treturn false // Return false to block the message, or return true to allow the message;",
+      "};",
+      "",
+      "// Register",
+      "RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_GUILD_CHAT, (...args) => $1(...args));"
+    ],
+    "description": "Player Event on Guild Chat",
+    "scope": "typescript"
+  },
+  "Channel Chat": {
+    "prefix": "player_channel_chat",
+    "body": [
+      "const $1: player_event_on_channel_chat = (event: number, player: Player, msg: string, Type: ChatMsg, lang: Language, channel: number): string | boolean => {",
+      "\t// Implementation",
+      "\treturn '' // Return a string to override the message, or return nothing to keep the original message;",
+      "\treturn false // Return false to block the message, or return true to allow the message;",
+      "};",
+      "",
+      "// Register",
+      "RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_CHANNEL_CHAT, (...args) => $1(...args));"
+    ],
+    "description": "Player Event on Channel Chat",
+    "scope": "typescript"
+  },
+  "Emote": {
+    "prefix": "player_emote",
+    "body": [
+      "const $1: player_event_on_emote = (event: number, player: Player, emote: EmoteType) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_EMOTE, (...args) => $1(...args));"
+    ],
+    "description": "Player Event on Emote",
+    "scope": "typescript"
+  },
+  "Text Emote": {
+    "prefix": "player_text_emote",
+    "body": [
+      "const $1: player_event_on_text_emote = (event: number, player: Player, textEmote: string, emoteNum: number, guid: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_TEXT_EMOTE, (...args) => $1(...args));"
+    ],
+    "description": "Player Event on Text Emote",
+    "scope": "typescript"
+  },
+  "Save": {
+    "prefix": "player_save",
+    "body": [
+      "const $1: player_event_on_save = (event: number, player: Player) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_SAVE, (...args) => $1(...args));"
+    ],
+    "description": "Player Event on Save",
+    "scope": "typescript"
+  },
+  "Bind to Instance": {
+    "prefix": "player_bind_to_instance",
+    "body": [
+      "const $1: player_event_on_bind_to_instance = (event: number, player: Player, difficulty: Difficulty, mapid: number, permanent: boolean) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_BIND_TO_INSTANCE, (...args) => $1(...args));"
+    ],
+    "description": "Player Event on Bind to Instance",
+    "scope": "typescript"
+  },
+  "Update Zone": {
+    "prefix": "player_update_zone",
+    "body": [
+      "const $1: player_event_on_update_zone = (event: number, player: Player, newZone: ZoneIdType, newArea: number) => {",
+      "\tif(newZone === ZoneIdType.Dalaran) {",
+      "\t\t// Implementation",
+      "\t}",
+      "};",
+      "",
+      "// Register",
+      "RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_UPDATE_ZONE, (...args) => $1(...args));"
+    ],
+    "description": "Player Event on Update Zone",
+    "scope": "typescript"
+  },
+  "Map Change": {
+    "prefix": "player_map_change",
+    "body": [
+      "const $1: player_event_on_map_change = (event: number, player: Player) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register",
+      "RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_MAP_CHANGE, (...args) => $1(...args));"
+    ],
+    "description": "Player Event on Map Change",
+    "scope": "typescript"
+  },
+  "Server Packet Receive": {
+    "prefix": "server_packet_receive",
+    "body": [
+      "const $1: server_event_on_packet_receive_any = (event: number, packet: WorldPacket, player?: Player): boolean | WorldPacket => {",
+      "\t// Implementation",
+      "\treturn false;",
+      "\treturn <WorldPacket>packet;",
+      "};",
+      "",
+      "// Register Server Event on Packet Receive",
+      "RegisterServerEvent(ServerEvents.SERVER_EVENT_ON_PACKET_RECEIVE, (...args) => $1(...args));"
+    ],
+    "description": "Server Event on Packet Receive",
+    "scope": "typescript"
+  },
+  "Server Packet Send": {
+    "prefix": "server_packet_send",
+    "body": [
+      "const $1: server_event_on_packet_send_any = (event: number, packet: WorldPacket, player?: Player): boolean | WorldPacket => {",
+      "\t// Implementation",
+      "\treturn false;",
+      "\treturn <WorldPacket>packet;",
+      "};",
+      "",
+      "// Register Server Event on Packet Send",
+      "RegisterServerEvent(ServerEvents.SERVER_EVENT_ON_PACKET_SEND, (...args) => $1(...args));"
+    ],
+    "description": "Server Event on Packet Send",
+    "scope": "typescript"
+  },
+  "Server Open State Change": {
+    "prefix": "server_open_state_change",
+    "body": [
+      "const $1: world_event_on_open_state_change = (event: number, open: boolean) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register Server Event on Open State Change",
+      "RegisterServerEvent(ServerEvents.WORLD_EVENT_ON_OPEN_STATE_CHANGE, (...args) => $1(...args));"
+    ],
+    "description": "World Event on Open State Change",
+    "scope": "typescript"
+  },
+  "Server Config Load": {
+    "prefix": "server_config_load",
+    "body": [
+      "const $1: world_event_on_config_load = (event: number, reload: boolean) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register Server Event on Config Load",
+      "RegisterServerEvent(ServerEvents.WORLD_EVENT_ON_CONFIG_LOAD, (...args) => $1(...args));"
+    ],
+    "description": "World Event on Config Load",
+    "scope": "typescript"
+  },
+  "Server Shutdown Init": {
+    "prefix": "server_shutdown_init",
+    "body": [
+      "const $1: world_event_on_shutdown_init = (event: number, code: number, mask: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register Server Event on Shutdown Init",
+      "RegisterServerEvent(ServerEvents.WORLD_EVENT_ON_SHUTDOWN_INIT, (...args) => $1(...args));"
+    ],
+    "description": "World Event on Shutdown Init",
+    "scope": "typescript"
+  },
+  "Server Shutdown Cancel": {
+    "prefix": "server_shutdown_cancel",
+    "body": [
+      "const $1: world_event_on_shutdown_cancel = (event: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register Server Event on Shutdown Cancel",
+      "RegisterServerEvent(ServerEvents.WORLD_EVENT_ON_SHUTDOWN_CANCEL, (...args) => $1(...args));"
+    ],
+    "description": "World Event on Shutdown Cancel",
+    "scope": "typescript"
+  },
+  "Server Update": {
+    "prefix": "server_update",
+    "body": [
+      "const $1: world_event_on_update = (event: number, diff: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register Server Event on Update",
+      "RegisterServerEvent(ServerEvents.WORLD_EVENT_ON_UPDATE, (...args) => $1(...args));"
+    ],
+    "description": "World Event on Update",
+    "scope": "typescript"
+  },
+  "Server Startup": {
+    "prefix": "server_startup",
+    "body": [
+      "const $1: world_event_on_startup = (event: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register Server Event on Startup",
+      "RegisterServerEvent(ServerEvents.WORLD_EVENT_ON_STARTUP, (...args) => $1(...args));"
+    ],
+    "description": "World Event on Startup",
+    "scope": "typescript"
+  },
+  "Server Shutdown": {
+    "prefix": "server_shutdown",
+    "body": [
+      "const $1: world_event_on_shutdown = (event: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register Server Event on Shutdown",
+      "RegisterServerEvent(ServerEvents.WORLD_EVENT_ON_SHUTDOWN, (...args) => $1(...args));"
+    ],
+    "description": "World Event on Shutdown",
+    "scope": "typescript"
+  },
+  "Server Lua State Open": {
+    "prefix": "server_lua_state_open",
+    "body": [
+      "const $1: eluna_event_on_lua_state_open = (event: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register Server Event on Lua State Open",
+      "RegisterServerEvent(ServerEvents.ELUNA_EVENT_ON_LUA_STATE_OPEN, (...args) => $1(...args));"
+    ],
+    "description": "Eluna Event on Lua State Open",
+    "scope": "typescript"
+  },
+  "Server Delete Creature": {
+    "prefix": "server_delete_creature",
+    "body": [
+      "const $1: world_event_on_delete_creature = (event: number, creature: Creature) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register Server Event on Delete Creature",
+      "RegisterServerEvent(ServerEvents.WORLD_EVENT_ON_DELETE_CREATURE, (...args) => $1(...args));"
+    ],
+    "description": "World Event on Delete Creature",
+    "scope": "typescript"
+  },
+  "Server Delete Gameobject": {
+    "prefix": "server_delete_gameobject",
+    "body": [
+      "const $1: world_event_on_delete_gameobject = (event: number, gameObject: GameObject) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register Server Event on Delete Gameobject",
+      "RegisterServerEvent(ServerEvents.WORLD_EVENT_ON_DELETE_GAMEOBJECT, (...args) => $1(...args));"
+    ],
+    "description": "World Event on Delete Gameobject",
+    "scope": "typescript"
+  },
+  "Server Game Event Start": {
+    "prefix": "server_game_event_start",
+    "body": [
+      "const $1: game_event_start = (event: number, gameEventId: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register Server Event on Game Event Start",
+      "RegisterServerEvent(ServerEvents.GAME_EVENT_START, (...args) => $1(...args));"
+    ],
+    "description": "Game Event Start",
+    "scope": "typescript"
+  },
+  "Server Game Event Stop": {
+    "prefix": "server_game_event_stop",
+    "body": [
+      "const $1: game_event_stop = (event: number, gameEventId: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register Server Event on Game Event Stop",
+      "RegisterServerEvent(ServerEvents.GAME_EVENT_STOP, (...args) => $1(...args));"
+    ],
+    "description": "Game Event Stop",
+    "scope": "typescript"
+  },
+  "EMap Event on Create": {
+    "prefix": "server_map_on_create",
+    "body": [
+      "const $1: map_event_on_create = (event: number, map: EMap) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register Map Event on Create",
+      "RegisterServerEvent(ServerEvents.MAP_EVENT_ON_CREATE, (...args) => $1(...args));"
+    ],
+    "description": "Map Event on Create",
+    "scope": "typescript"
+  },
+  "Map Event on Destroy": {
+    "prefix": "server_map_on_destroy",
+    "body": [
+      "const $1: map_event_on_destroy = (event: number, map: EMap) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register Map Event on Destroy",
+      "RegisterServerEvent(ServerEvents.MAP_EVENT_ON_DESTROY, (...args) => $1(...args));"
+    ],
+    "description": "Map Event on Destroy",
+    "scope": "typescript"
+  },
+  "Map Event on Player Enter": {
+    "prefix": "server_map_on_player_enter",
+    "body": [
+      "const $1: map_event_on_player_enter = (event: number, map: EMap, player: Player) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register Map Event on Player Enter",
+      "RegisterServerEvent(ServerEvents.MAP_EVENT_ON_PLAYER_ENTER, (...args) => $1(...args));"
+    ],
+    "description": "Map Event on Player Enter",
+    "scope": "typescript"
+  },
+  "Map Event on Player Leave": {
+    "prefix": "server_map_on_player_leave",
+    "body": [
+      "const $1: map_event_on_player_leave = (event: number, map: EMap, player: Player) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register Map Event on Player Leave",
+      "RegisterServerEvent(ServerEvents.MAP_EVENT_ON_PLAYER_LEAVE, (...args) => $1(...args));"
+    ],
+    "description": "Map Event on Player Leave",
+    "scope": "typescript"
+  },
+  "Map Event on Update": {
+    "prefix": "server_map_on_update",
+    "body": [
+      "const $1: map_event_on_update = (event: number, map: EMap, diff: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register Map Event on Update",
+      "RegisterServerEvent(ServerEvents.MAP_EVENT_ON_UPDATE, (...args) => $1(...args));"
+    ],
+    "description": "Map Event on Update",
+    "scope": "typescript"
+  },
+  "Trigger Event on Trigger": {
+    "prefix": "server_trigger",
+    "body": [
+      "const $1: trigger_event_on_trigger = (event: number, player: Player, triggerId: number): boolean => {",
+      "\t// Implementation",
+      "\treturn false;",
+      "};",
+      "",
+      "// Register Trigger Event on Trigger",
+      "RegisterServerEvent(ServerEvents.TRIGGER_EVENT_ON_TRIGGER, (...args) => $1(...args));"
+    ],
+    "description": "Trigger Event on Trigger",
+    "scope": "typescript"
+  },
+  "Weather Event on Change": {
+    "prefix": "weather_on_change",
+    "body": [
+      "const $1: weather_event_on_change = (event: number, zoneId: number, state: WeatherState, grade: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register Weather Event on Change",
+      "RegisterServerEvent(ServerEvents.WEATHER_EVENT_ON_CHANGE, (...args) => $1(...args));"
+    ],
+    "description": "Weather Event on Change",
+    "scope": "typescript"
+  },
+  "Auction Event on Add": {
+    "prefix": "auction_on_add",
+    "body": [
+      "const $1: auction_event_on_add = (event: number, auctionId: number, owner: Player, item: Item, expireTime: number, buyout: number, startBid: number, currentBid: number, bidderGUIDLow: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register Auction Event on Add",
+      "RegisterServerEvent(ServerEvents.AUCTION_EVENT_ON_ADD, (...args) => $1(...args));"
+    ],
+    "description": "Auction Event on Add",
+    "scope": "typescript"
+  },
+  "Auction Event on Remove": {
+    "prefix": "auction_on_remove",
+    "body": [
+      "const $1: auction_event_on_remove = (event: number, auctionId: number, owner: Player, item: Item, expireTime: number, buyout: number, startBid: number, currentBid: number, bidderGUIDLow: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register Auction Event on Remove",
+      "RegisterServerEvent(ServerEvents.AUCTION_EVENT_ON_REMOVE, (...args) => $1(...args));"
+    ],
+    "description": "Auction Event on Remove",
+    "scope": "typescript"
+  },
+  "Auction Event on Successful": {
+    "prefix": "auction_on_successful",
+    "body": [
+      "const $1: auction_event_on_successful = (event: number, auctionId: number, owner: Player, item: Item, expireTime: number, buyout: number, startBid: number, currentBid: number, bidderGUIDLow: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register Auction Event on Successful",
+      "RegisterServerEvent(ServerEvents.AUCTION_EVENT_ON_SUCCESSFUL, (...args) => $1(...args));"
+    ],
+    "description": "Auction Event on Successful",
+    "scope": "typescript"
+  },
+  "Auction Event on Expire": {
+    "prefix": "auction_on_expire",
+    "body": [
+      "const $1: auction_event_on_expire = (event: number, auctionId: number, owner: Player, item: Item, expireTime: number, buyout: number, startBid: number, currentBid: number, bidderGUIDLow: number) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register Auction Event on Expire",
+      "RegisterServerEvent(ServerEvents.AUCTION_EVENT_ON_EXPIRE, (...args) => $1(...args));"
+    ],
+    "description": "Auction Event on Expire",
+    "scope": "typescript"
+  },
+  "AddOn Event on Message": {
+    "prefix": "addon_on_message",
+    "body": [
+      "const $1: addon_event_on_message = (event: number, sender: string, type: AddonMessageType, prefix: string, msg: string, target?: string) => {",
+      "\t// Implementation",
+      "};",
+      "",
+      "// Register AddOn Event on Message",
+      "RegisterServerEvent(ServerEvents.ADDON_EVENT_ON_MESSAGE, (...args) => $1(...args));"
+    ],
+    "description": "AddOn Event on Message",
+    "scope": "typescript"
+  }
+}

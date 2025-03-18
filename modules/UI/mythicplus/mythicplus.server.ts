@@ -131,27 +131,27 @@ const MPStartState: player_event_on_login = (_event: number, player: Player): vo
 // On login set up the mythic panel mod state for the player
 RegisterPlayerEvent(PlayerEvents.PLAYER_EVENT_ON_LOGIN, (...args) => MPStartState(...args));
 
-const MPGroupDisband: group_event_on_disband = (_event: number, group: Group): void => {
-    const members = group.GetMembers();
+// const MPGroupDisband: group_event_on_disband = (_event: number, group: Group): void => {
+//     const members = group.GetMembers();
 
-    for(let i = 0; i < members.length; i++) {
-        _refreshState(members[i]);
-        aio.Handle(members[i], 'MythicPlus', 'UpdateState', StateStorage.get(members[i].GetGUIDLow()));
-    }
-}
+//     for(let i = 0; i < members.length; i++) {
+//         _refreshState(members[i]);
+//         aio.Handle(members[i], 'MythicPlus', 'UpdateState', StateStorage.get(members[i].GetGUIDLow()));
+//     }
+// }
 
-RegisterGroupEvent(GroupEvents.GROUP_EVENT_ON_DISBAND, (...args) => MPGroupDisband(...args));
+// RegisterGroupEvent(GroupEvents.GROUP_EVENT_ON_DISBAND, (...args) => MPGroupDisband(...args));
 
 // When a leader change happens need to update the state storage for each leader to enable changes in the panel. 
-const MPLeaderChange: group_event_on_leader_change = (_event: number,group: Group, leader: number, oldLeader: number): void => {
-    _refreshState(GetPlayerByGUID(leader));
-    aio.Handle(GetPlayerByGUID(leader), 'MythicPlus', 'UpdateState', StateStorage.get(leader));
+// const MPLeaderChange: group_event_on_leader_change = (_event: number,group: Group, leader: number, oldLeader: number): void => {
+//     _refreshState(GetPlayerByGUID(leader));
+//     aio.Handle(GetPlayerByGUID(leader), 'MythicPlus', 'UpdateState', StateStorage.get(leader));
 
-    _refreshState(GetPlayerByGUID(oldLeader));
-    aio.Handle(GetPlayerByGUID(oldLeader), 'MythicPlus', 'UpdateState', StateStorage.get(oldLeader));
-}
+//     _refreshState(GetPlayerByGUID(oldLeader));
+//     aio.Handle(GetPlayerByGUID(oldLeader), 'MythicPlus', 'UpdateState', StateStorage.get(oldLeader));
+// }
 
-RegisterGroupEvent(GroupEvents.GROUP_EVENT_ON_LEADER_CHANGE, (...args) => MPLeaderChange(...args));
+// RegisterGroupEvent(GroupEvents.GROUP_EVENT_ON_LEADER_CHANGE, (...args) => MPLeaderChange(...args));
 
 
 const DeletePlayerState: player_event_on_logout = (event: number, player: Player) => {

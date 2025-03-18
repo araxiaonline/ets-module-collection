@@ -8,12 +8,12 @@ if(!aio.AddAddon()) {
 const mythicPlusHandlers = aio.AddHandlers('MythicPlus', {}); 
 
 const selectImages = [
-    "Interface/MythicPlus/mythic",
-    "Interface/MythicPlus/mythic-selected",
-    "Interface/MythicPlus/legendary",      
-    "Interface/MythicPlus/legendary-selected",
-    "Interface/MythicPlus/ascendant",
-    "Interface/MythicPlus/ascendant-selected"
+    "Interface/Modules/MythicPlus/Textures/mythic",
+    "Interface/Modules/MythicPlus/Textures/mythic-selected",
+    "Interface/Modules/MythicPlus/Textures/legendary",      
+    "Interface/Modules/MythicPlus/Textures/legendary-selected",
+    "Interface/Modules/MythicPlus/Textures/ascendant",
+    "Interface/Modules/MythicPlus/Textures/ascendant-selected"
 ];
 
 const Difficulty = {
@@ -289,14 +289,14 @@ function CreateSkullFrame(difficulty: Difficulty, title: string, imageIndex: num
     
         PlaySound("PVPTHROUGHQUEUE");        
 
-        if(MythicClientState.difficulty == f.GetID()) {
-            MythicClientState.difficulty = GetDungeonDifficultyID() - 1;            
-            refreshUIState();        
-        } else {    
-            MythicClientState.difficulty = f.GetID();
-            // always assume heoric for map setting for scaling under the hood.
-            SetDungeonDifficulty(2); 
-        }
+        // if(MythicClientState.difficulty == f.GetID()) {
+        //     MythicClientState.difficulty = GetDungeonDifficultyID() - 1;            
+        //     refreshUIState();        
+        // } else {    
+        //     MythicClientState.difficulty = f.GetID();
+        //     // always assume heoric for map setting for scaling under the hood.
+        //     SetDungeonDifficulty(2); 
+        // }
 
         aio.Handle("MythicPlus", "SetDifficulty", MythicClientState.difficulty);
         refreshUIState();        
@@ -414,7 +414,51 @@ function ShowUIButton(): void {
     // btnTexture.SetTexture(selectImages[0]);
 }
 
-ShowUIButton();
-    
+ShowUIPanel(); 
+function AddMythicPlusMicroButton(): void {
+    // Attach to MicroButtonAndBagsBar or UIParent for visibility
+    const anchorButton = _G["HelpMicroButton"] ?? _G["SpellbookMicroButton"] ?? _G["MicroButtonAndBagsBar"] ?? UIParent;
 
+    // Create the button using Blizzard UI conventions with TypeScript syntax
+    const microButton: WoWAPI.Button = CreateFrame("Button", "MythicPlusMicroButton", _G["MicroButtonAndBagsBar"] ?? UIParent);
+    microButton.SetSize(25, 53);
+    microButton.SetPoint("LEFT", anchorButton, "RIGHT", 2, 0);
+    microButton.SetFrameLevel(anchorButton.GetFrameLevel() + 1);
+    microButton.SetFrameStrata("DIALOG");
+    microButton.EnableMouse(true);
+    microButton.RegisterForClicks("LeftButtonUp", "RightButtonUp");
+
+    // Set Blizzard-style micro button textures using TypeScript API
+    const normalTex = microButton.CreateTexture("MythicPlusNormalTex", "BACKGROUND");
+    normalTex.SetTexture("Interface\\Buttons\\UI-MicroButton-Socials-Up");
+    normalTex.SetAllPoints();
+    microButton.SetNormalTexture(normalTex);
+
+    const highlightTex = microButton.CreateTexture("MythicPlusHighlightTex", "HIGHLIGHT");
+    highlightTex.SetTexture("Interface\\Buttons\\UI-MicroButton-Socials-Highlight");
+    highlightTex.SetAllPoints();
+    microButton.SetHighlightTexture(highlightTex);
+
+    const pushedTex = microButton.CreateTexture("MythicPlusPushedTex", "ARTWORK");
+    pushedTex.SetTexture("Interface\\Buttons\\UI-MicroButton-Socials-Down");
+    pushedTex.SetAllPoints();
+    microButton.SetPushedTexture(pushedTex);
+
+    microButton.SetScript("OnClick", (f: WoWAPI.Frame, button: string) => {
+        if(button !== "LeftButton") {
+            return;
+        }
+        PlaySound("GAMEDIALOGOPEN");
+        aio.Handle("MythicPlus", "ShowUI");        
+    });
+
+    microButton.Show();
 }
+
+// Call this function to add the button to the Micro Menu on load
+  AddMythicPlusMicroButton();
+}
+
+
+
+    

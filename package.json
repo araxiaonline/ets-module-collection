@@ -5,18 +5,22 @@
     "dev": "npm run clean && ets build && npm run dev-copy",
     "dev-copy": "dotenv -e ets.env cross-var ncp %ETS_BUILD_ROOT% %DEV_MODULE_PATH%",
     "dev:watch": "ets build -w",
-    "deploy:dev": "npm run build && npx ets deploy -e dev"
+    "deploy:dev": "npm run clean && ets build && npx ets deploy -e dev",
+    "deploy:prod": "npm run clean && ets build && npx ets deploy -e prod",
+    "reload-eluna": "./scripts/reload-eluna.exp",
+    "watch:dev": "nodemon --watch modules --ext ts --ignore node_modules/ --exec \"npm run deploy:dev && npm run reload-eluna\""
   },
   "devDependencies": {
     "cross-var": "^1.1.0",
     "dotenv-cli": "^7.3.0",
+    "nodemon": "^3.1.9",
     "rimraf": "^5.0.5",
     "typescript": "^5.2.2",
     "typescript-to-lua": "^1.23.0"
   },
   "dependencies": {
     "@types/fs-extra": "^11.0.4",
-    "@types/node": "^20.11.15",    
+    "@types/node": "^20.11.15",
     "fs-extra": "^11.2.0",
     "ts-node": "^10.9.1",
     "wow-eluna-ts-module": "^1.9.3"
