@@ -147,7 +147,7 @@ const GossipSelect: gossip_event_on_select = (event: number, player: Player, cre
             1
         ); 
                     
-        player.RemoveItem(PlayerItem, PlayerItem.GetEntry(), 1);
+        player.RemoveItem(PlayerItem, 1);
 
         player.GossipClearMenu(); 
         player.GossipComplete();         

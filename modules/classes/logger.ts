@@ -1,4 +1,5 @@
 // Purpose: Logger class to log messages to the console.
+
 export class Logger { 
     
     public logname: string; 
