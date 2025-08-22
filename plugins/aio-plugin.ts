@@ -43,7 +43,8 @@ function keyifyFile(file: string, program: ts.Program): string {
 function buildSourceMap(files: tstl.EmitFile[], program: ts.Program) {
   const sourceMap: Map<string, string> = new Map();
   for(const file of files) {
-    let sourceKey = file.outputPath.replace(program.getCompilerOptions().outDir + '/' ?? '', ''); 
+    const outDir = program.getCompilerOptions().outDir || '';
+    let sourceKey = file.outputPath.replace(outDir + '/', ''); 
     sourceKey = sourceKey.replace('.lua', ''); 
     sourceMap.set(sourceKey, file.code);
   }
@@ -62,10 +63,12 @@ function resolveRequire(modulepath: string, sourceMap: Map<string, string>, code
   let filepath =  modulepath.replace(/\./g, "/"); 
   let output: string = code || ''; 
 
+  console.log("client files modules being resolved: ", filepath);
+
   // skip resolved modules only want to include them once to avoid namespace issues. 
   if(resolvedModules.includes(modulepath)) {
-    console.log('skipping already resolved module: ', modulepath);
-    return ''; 
+    console.log('found already resolved module: ', modulepath);
+    // return ''; 
   }
 
   // have to check if the file we are resolving also has requires that need to be resolved. 
@@ -101,6 +104,29 @@ function resolveExports(code: string, name: string) {
         .replace(/____exports/g, `____${name}`);   
 }
 
+function transpileClientFile(file: string) {
+  const tmpPath = path.join(os.tmpdir(), 'ets-compile') + '/' + new Date().getTime().toString();
+  const result = tstl.transpileFiles([file],{        
+    outDir: tmpPath,         
+    luaLibImport: tstl.LuaLibImportKind.Inline, 
+    luaTarget: tstl.LuaTarget.Lua52,
+    strict: false,
+    target: ts.ScriptTarget.ESNext,           
+    skipLibCheck: true,             
+    noHeader: true,   
+    lib: [ 'lib.esnext.d.ts', 'lib.dom.d.ts' ],        
+    types: [          
+      'lua-types/5.2',
+      '@typescript-to-lua/language-extensions',
+      'wow-eluna-ts-module',
+      '@araxiaonline/wow-wotlk-declarations',
+      'node'
+    ],                            
+  });
+
+  return result;
+}
+
 /**
  * The default mechanism for transpiling files is "require" the common Polyfill bundle code. This is actually great 
  * for server side code, however breaks client side code. So this hook transpiles the client code with "inline"
@@ -121,7 +147,7 @@ function afterPrint(
     if (file.fileName.includes(".client.ts")) {
 
       const sourceCode = readFileSync(file.fileName, "utf-8");           
-      const tmpPath = path.join(os.tmpdir(), 'ets-compile');           
+      const tmpPath = path.join(os.tmpdir(), 'ets-compile', new Date().getTime().toString());    
 
       const result = tstl.transpileFiles([file.fileName],{        
         outDir: tmpPath,         
@@ -159,13 +185,25 @@ function afterPrint(
         
       file.code = transpiled ?? file.code;       
 
+      // not effective way of doing this walking each line parsing for requires using regex :D 
       for (const line of file.code.split("\n")) {
-        const [variable, module] = requireSymbol(line) ?? ["", ""];
-
+        let [variable, module] = requireSymbol(line) ?? ["", ""];        
+        
         if (module && module !== "AIO") {
+          
+          // handle relative links 
+          let relModule = module;
+          if(module.indexOf(".") === -1) {
+            relModule = path.join(path.dirname(luaPath), module);
+            module = relModule.replace(/^\//, '').replace(/\//g, '.');            
+          }
+
+          console.log(`Client Module Dependencies: variable: ${variable}, module: ${module}`);
+
           file.code = file.code.replace(line, `local ____${variable} = {}\n-- INLINE(${module})`);      
           
           const currentRequires = requires.get(mapKey) ?? [];
+
           requires.set(mapKey, [...currentRequires, { module, variable }]);                                
         }        
       }         
@@ -208,10 +246,11 @@ const plugin: tstl.Plugin = {
   ) {
     
     // build a source map first for resolving requires 
-    const sourceMap = buildSourceMap(result, program);
+    const sourceMap = buildSourceMap(result, program);    
 
     for (const file of result) {
       const mapKey = keyifyFile(file.outputPath, program);       
+      
       if(file.code.includes("aio = {}")) {
 
         // Handle necessary AIO replaces post transpile
@@ -220,17 +259,20 @@ const plugin: tstl.Plugin = {
         file.code = file.code.replace(/aio[\.\:]/g, "AIO."); 
 
         // Is targetted for AIO Client. 
-        if(file.code.includes("if not AIO.AddAddon() then")) {
-                    
+        if(file.code.includes("if not AIO.AddAddon() then")) {                    
           requires.forEach( (requiredModules: RequiredDefintion[], caller) => {
 
             if(mapKey !== caller) {
               return; 
             }
             
-            requiredModules.forEach((requiredModule) => {
-              
+            requiredModules.forEach((requiredModule) => {              
               const moduleCode = resolveExports(resolveRequire(requiredModule.module, sourceMap), requiredModule.variable);               
+              if(!moduleCode) {
+                console.error(`Module ${requiredModule.module} code not found in source map failed to resolve`);
+                return; 
+              }
+
               file.code = file.code.replace(`-- INLINE(${requiredModule.module})\n`, `-- INLINE(${requiredModule.module})\n` + moduleCode); 
             });           
                         
