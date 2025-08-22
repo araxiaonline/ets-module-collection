@@ -553,11 +553,13 @@ export function isBossDbCheck(entry: number): boolean {
     left join creature c on ct.entry = c.id1
     left join map_dbc m on c.map = m.ID
      where
-         (ct.\`rank\` = 3 and InstanceType > 0)
+         ((ct.\`rank\` = 3 and InstanceType > 0)
          OR (ct.\`rank\` = 3 and ct.ScriptName like 'boss_%')
          OR (ExpansionID = 1 and ct.ScriptName like '%boss%')
-         OR (m.InstanceType = 1 and ExperienceModifier = 2)
+         OR (m.InstanceType = 1 and ExperienceModifier = 2))
          and entry = ${entry}`;
+
+    logger.debug(`Checking if ${entry} is a boss sql: ${sql}`);
 
     const result = WorldDBQuery(sql);
     if(result) {
