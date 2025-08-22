@@ -1,13 +1,14 @@
 {
   "scripts": {
     "clean": "dotenv -e ets.env cross-var rimraf %ETS_BUILD_ROOT%",
-    "build": "ets build",
+    "build": "npm run clean && ets build",
     "dev": "npm run clean && ets build && npm run dev-copy",
     "dev-copy": "dotenv -e ets.env cross-var ncp %ETS_BUILD_ROOT% %DEV_MODULE_PATH%",
     "dev:watch": "ets build -w",
     "deploy:dev": "npm run clean && ets build && npx ets deploy -e dev",
     "deploy:prod": "npm run clean && ets build && npx ets deploy -e prod",
     "reload-eluna": "./scripts/reload-eluna.exp",
+    "watch:build-only": "nodemon --watch modules --ext ts --ignore node_modules/ --exec \"npm run deploy:dev\"",
     "watch:dev": "nodemon --watch modules --ext ts --ignore node_modules/ --exec \"npm run deploy:dev && npm run reload-eluna\""
   },
   "devDependencies": {
