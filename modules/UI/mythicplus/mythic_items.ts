@@ -25,6 +25,14 @@ export const FUSED_MYTHIC_DARK_CRYSTAL = 911022;
 export const FUSED_RARE_EARTH_STONE = 911023;
 export const FUSED_MYTHIC_EARTH_STONE = 911024;
 
+export const VOID_BADGE = 911050;
+export const EMBLEM_OF_UNDEATH = 911051;
+export const EMBLEM_OF_CHAOS = 911052;
+export const EMBLEM_OF_VEIL = 911053;
+export const MYTHIC_TOKEN = 911054;
+
+
+
 export const MYTHIC_MATERIALS = {
     ANCIENT_DICE,
     ONYX_SPIKE_RELIC,

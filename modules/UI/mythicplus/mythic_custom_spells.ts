@@ -317,8 +317,6 @@ PrintInfo(`materialId: ${materialId} and spell: ${spell.GetEntry()}`);
     return true;
 };
 
-
-
     // // Get the item
     // const stackCount = GetTotalStackCount(item);
 
