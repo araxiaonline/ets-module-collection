@@ -253,7 +253,12 @@ const onSpell: player_event_on_spell_cast = (event: number, player: Player, spel
     
         for(let i = 0; i < members.length; i++) {
             player.SendChatMessageToPlayer(ChatMsg.CHAT_MSG_RAID_BOSS_EMOTE,Language.LANG_COMMON,`${player.GetName()} is taking a gamble!`, members[i]);
-            aio.Handle(members[i], 'AIOAudioPlayer', 'PlaySingleSound',sound);
+            // Use the updated audio player with player name and audio options
+            aio.Handle(members[i], 'AIOAudioPlayer', 'PlaySingleSound', sound, {
+                channel: "SFX",
+                volume: 0.5,
+                duration: 12.0  // Most opening sounds are short
+            }, members[i].GetName());
         }
 
     }
@@ -281,7 +286,12 @@ const onLootStateChange: gameobject_event_on_loot_state_change = (event: number,
             const players = gameObject.GetPlayersInRange(50);
             for(let i = 0; i < players.length; i++) {
                 const player = players[i];
-                aio.Handle(player, 'AIOAudioPlayer', 'PlaySingleSound', sound);
+                // Use the updated audio player with player name and audio options
+                aio.Handle(player, 'AIOAudioPlayer', 'PlaySingleSound', sound, {
+                    channel: "SFX",
+                    volume: 0.5, // Trap sounds should be louder
+                    duration: 8.0 // Most trap sounds are short
+                }, player.GetName());
             }            
 
             if(player.IsAlive()) {
@@ -304,7 +314,12 @@ const onLootStateChange: gameobject_event_on_loot_state_change = (event: number,
                 
                     for(let i = 0; i < members.length; i++) {
                         members[i].SendBroadcastMessage(`{player.GetName()} has triggered trap number ${effect}, hate that guy!`);
-                        aio.Handle(members[i], 'AIOAudioPlayer', 'PlaySingleSound',sound);
+                        // Use the updated audio player with player name and audio options
+                        aio.Handle(members[i], 'AIOAudioPlayer', 'PlaySingleSound', sound, {
+                            channel: "SFX",
+                            volume: 0.5,
+                            duration: 8.0 // Most trap sounds are short
+                        }, members[i].GetName());
                     }
 
                     player.CastSpell(player, effect, true);                                
@@ -319,7 +334,12 @@ const onLootStateChange: gameobject_event_on_loot_state_change = (event: number,
             const players = gameObject.GetPlayersInRange(50);
             for(let i = 0; i < players.length; i++) {
                 const player = players[i];
-                aio.Handle(player, 'AIOAudioPlayer', 'PlaySingleSound', LootGoodSound);
+                // Use the updated audio player with player name and audio options
+                aio.Handle(player, 'AIOAudioPlayer', 'PlaySingleSound', LootGoodSound, {
+                    channel: "SFX",
+                    volume: 0.5,
+                    duration: 25.0 // Loot sound is short
+                }, player.GetName());
             }
             
         }

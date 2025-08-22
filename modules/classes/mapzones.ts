@@ -2,6 +2,17 @@ import { Logger } from "./logger";
 
 const logger = new Logger("MapZones");
 
+// Base Game map difficulties
+export enum MapDifficulties {
+    NORMAL = 1,
+    HEROIC = 2,
+}
+
+export enum MapTypes {
+    DUNGEON = 1,
+    RAID = 2,
+}
+
 export enum MapNames {
     // Classic WoW dungeons
     RAGEFIRE_CHASM = 'ragefire_chasm',
@@ -534,3 +545,23 @@ export function getBossByName(name: string): Boss | undefined {
 export const BossIDs: Record<number, boolean> = Object.fromEntries(
   Bosses.map(b => [b.entry, true])
 );
+
+export function isBossDbCheck(entry: number): boolean {
+    const sql = `
+    select distinct entry
+    from acore_world.creature_template ct
+    left join creature c on ct.entry = c.id1
+    left join map_dbc m on c.map = m.ID
+     where
+         (ct.\`rank\` = 3 and InstanceType > 0)
+         OR (ct.\`rank\` = 3 and ct.ScriptName like 'boss_%')
+         OR (ExpansionID = 1 and ct.ScriptName like '%boss%')
+         OR (m.InstanceType = 1 and ExperienceModifier = 2)
+         and entry = ${entry}`;
+
+    const result = WorldDBQuery(sql);
+    if(result) {
+        return true;
+    }
+    return false;
+}
