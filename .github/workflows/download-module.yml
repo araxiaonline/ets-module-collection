@@ -1,0 +1,248 @@
+name: Download Individual Module
+
+on:
+  workflow_dispatch:
+    inputs:
+      module_category:
+        description: 'Module Category'
+        required: true
+        type: choice
+        options:
+          - 'UI/botmgr'
+          - 'UI/gambler'
+          - 'UI/mythicplus'
+          - 'UI/shared'
+          - 'classes'
+          - 'commands'
+          - 'constants'
+          - 'events'
+          - 'gameobject'
+          - 'gameplay'
+          - 'gm'
+          - 'items'
+          - 'npcs'
+          - 'all-modules'
+      specific_module:
+        description: 'Specific Module (optional - leave blank for entire category)'
+        required: false
+        type: string
+      include_dependencies:
+        description: 'Include shared dependencies (classes, constants, 00_Envs)'
+        required: true
+        type: boolean
+        default: true
+
+jobs:
+  build-module:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate version info
+        id: version
+        run: |
+          DATE=$(date +%Y-%m-%d)
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          VERSION="${DATE}-${SHORT_SHA}"
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+
+      - name: Prepare module build
+        id: prepare
+        run: |
+          mkdir -p temp-modules
+          
+          # Create dependency mapping
+          cat > dependency_map.json << 'EOF'
+          {
+            "UI/botmgr": ["constants", "classes"],
+            "UI/gambler": ["classes"],
+            "UI/mythicplus": ["classes", "constants"],
+            "UI/shared": [],
+            "classes": [],
+            "commands": ["classes"],
+            "constants": [],
+            "events": ["classes"],
+            "gameobject": ["classes"],
+            "gameplay": ["classes"],
+            "gm": [],
+            "items": ["classes"],
+            "npcs": ["classes", "constants"]
+          }
+          EOF
+          
+          # Always include 00_Envs (global environment)
+          cp -r modules/00_Envs temp-modules/
+          
+          # Function to add dependencies
+          add_dependencies() {
+            local category="$1"
+            local deps=$(cat dependency_map.json | jq -r ".\"$category\" // [] | .[]")
+            
+            for dep in $deps; do
+              if [ ! -d "temp-modules/$dep" ]; then
+                echo "Adding dependency: $dep"
+                cp -r "modules/$dep" temp-modules/
+              fi
+            done
+          }
+          
+          # Handle module selection and dependencies
+          if [ "${{ github.event.inputs.module_category }}" == "all-modules" ]; then
+            cp -r modules/* temp-modules/
+            MODULE_NAME="all-modules"
+            DEPENDENCIES="all"
+          elif [ -n "${{ github.event.inputs.specific_module }}" ]; then
+            # Specific file within category
+            CATEGORY="${{ github.event.inputs.module_category }}"
+            SPECIFIC="${{ github.event.inputs.specific_module }}"
+            if [ -f "modules/${CATEGORY}/${SPECIFIC}" ]; then
+              mkdir -p "temp-modules/${CATEGORY}"
+              cp "modules/${CATEGORY}/${SPECIFIC}" "temp-modules/${CATEGORY}/"
+              
+              # Add dependencies for this category
+              if [ "${{ github.event.inputs.include_dependencies }}" == "true" ]; then
+                add_dependencies "$CATEGORY"
+              fi
+              
+              MODULE_NAME="${CATEGORY}-${SPECIFIC%.*}"
+              DEPENDENCIES=$(cat dependency_map.json | jq -r ".\"$CATEGORY\" // [] | join(\", \")")
+            else
+              echo "Error: Module modules/${CATEGORY}/${SPECIFIC} not found"
+              exit 1
+            fi
+          else
+            # Entire category
+            CATEGORY="${{ github.event.inputs.module_category }}"
+            if [ -d "modules/${CATEGORY}" ]; then
+              cp -r "modules/${CATEGORY}" temp-modules/
+              
+              # Add dependencies for this category
+              if [ "${{ github.event.inputs.include_dependencies }}" == "true" ]; then
+                add_dependencies "$CATEGORY"
+              fi
+              
+              MODULE_NAME="${CATEGORY//\//-}"
+              DEPENDENCIES=$(cat dependency_map.json | jq -r ".\"$CATEGORY\" // [] | join(\", \")")
+            else
+              echo "Error: Category modules/${CATEGORY} not found"
+              exit 1
+            fi
+          fi
+          
+          echo "module_name=${MODULE_NAME}" >> $GITHUB_OUTPUT
+          echo "dependencies=${DEPENDENCIES}" >> $GITHUB_OUTPUT
+          
+          # List what's included for verification
+          echo "## Included modules:" >> $GITHUB_STEP_SUMMARY
+          find temp-modules -name "*.ts" | sed 's|temp-modules/||' | sort >> $GITHUB_STEP_SUMMARY
+
+      - name: Create temporary tsconfig for selected modules
+        run: |
+          cat > temp-tsconfig.json << 'EOF'
+          {
+            "extends": "./tsconfig.json",
+            "compilerOptions": {
+              "rootDir": "./temp-modules",
+              "outDir": "./temp-dist"
+            },
+            "include": [
+              "temp-modules/**/*"
+            ]
+          }
+          EOF
+
+      - name: Build selected modules
+        run: |
+          # Use typescript-to-lua directly with temp config
+          npx tstl -p temp-tsconfig.json
+
+      - name: Create module info files
+        run: |
+          mkdir -p temp-dist
+          
+          echo "ETS Module: ${{ steps.prepare.outputs.module_name }}" > temp-dist/module-info.txt
+          echo "Version: ${{ steps.version.outputs.version }}" >> temp-dist/module-info.txt
+          echo "Build Date: $(date)" >> temp-dist/module-info.txt
+          echo "Category: ${{ github.event.inputs.module_category }}" >> temp-dist/module-info.txt
+          echo "Dependencies: ${{ steps.prepare.outputs.dependencies }}" >> temp-dist/module-info.txt
+          echo "Includes Dependencies: ${{ github.event.inputs.include_dependencies }}" >> temp-dist/module-info.txt
+          echo "Commit: $(git rev-parse --short HEAD)" >> temp-dist/module-info.txt
+          
+          # Create installation instructions
+          cat > temp-dist/README.txt << EOF
+          ETS Module Installation Instructions
+          ===================================
+          
+          Module: ${{ steps.prepare.outputs.module_name }}
+          Dependencies included: ${{ steps.prepare.outputs.dependencies }}
+          
+          1. Extract this zip file to your World of Warcraft server's Eluna scripts directory
+          2. The .lua files should be placed in your server's script loading path
+          3. Restart your server or reload Eluna scripts
+          4. Check your server console for any loading errors
+          
+          IMPORTANT: If you selected a module with dependencies, this download includes:
+          - 00_Envs (global environment - always included)
+          - Required dependencies: ${{ steps.prepare.outputs.dependencies }}
+          
+          If you download multiple modules separately, you may have duplicate dependencies.
+          It's safe to overwrite duplicate files as they should be identical.
+          
+          For more information about ETS modules, visit:
+          https://github.com/araxiaonline/ets-module-collection
+          EOF
+
+      - name: Create downloadable artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.prepare.outputs.module_name }}-${{ steps.version.outputs.version }}
+          path: temp-dist/
+          retention-days: 7
+
+      - name: Create release for module
+        if: github.event.inputs.module_category != 'all-modules'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: module-${{ steps.prepare.outputs.module_name }}-${{ steps.version.outputs.version }}
+          release_name: Module - ${{ steps.prepare.outputs.module_name }} (${{ steps.version.outputs.version }})
+          body: |
+            Individual ETS module download: **${{ steps.prepare.outputs.module_name }}**
+            
+            **Module Category:** ${{ github.event.inputs.module_category }}
+            **Specific Module:** ${{ github.event.inputs.specific_module || 'Entire Category' }}
+            **Dependencies Required:** ${{ steps.prepare.outputs.dependencies }}
+            **Dependencies Included:** ${{ github.event.inputs.include_dependencies }}
+            **Version:** ${{ steps.version.outputs.version }}
+            **Build Date:** $(date)
+            
+            This is a standalone module build that can be downloaded and installed independently.
+            
+            Download the attached artifact zip file and follow the README.txt instructions for installation.
+          draft: false
+          prerelease: true
+
+      - name: Summary
+        run: |
+          echo "## Module Build Complete! 🚀" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Module:** ${{ steps.prepare.outputs.module_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Category:** ${{ github.event.inputs.module_category }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Dependencies Required:** ${{ steps.prepare.outputs.dependencies }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Dependencies Included:** ${{ github.event.inputs.include_dependencies }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Your module has been built and is available for download as an artifact above." >> $GITHUB_STEP_SUMMARY
+          echo "The artifact will be available for 7 days." >> $GITHUB_STEP_SUMMARY

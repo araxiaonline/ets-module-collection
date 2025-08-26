@@ -1,0 +1,101 @@
+name: Build and Deploy ETS Modules
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+    
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate version info
+        id: version
+        run: |
+          DATE=$(date +%Y-%m-%d)
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          VERSION="${DATE}-${SHORT_SHA}"
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "date=${DATE}" >> $GITHUB_OUTPUT
+          echo "sha=${SHORT_SHA}" >> $GITHUB_OUTPUT
+
+      - name: Build ETS modules
+        run: npm run build
+
+      - name: Generate version.txt
+        run: |
+          echo "Version: ${{ steps.version.outputs.version }}" > dist/version.txt
+          echo "Build Date: ${{ steps.version.outputs.date }}" >> dist/version.txt
+          echo "Commit: ${{ steps.version.outputs.sha }}" >> dist/version.txt
+          echo "Branch: ${{ github.ref_name }}" >> dist/version.txt
+
+      - name: Generate changelog.txt
+        run: |
+          echo "ETS Module Collection - Changelog" > dist/changelog.txt
+          echo "Version: ${{ steps.version.outputs.version }}" >> dist/changelog.txt
+          echo "=====================================\n" >> dist/changelog.txt
+          
+          # Get commits from last 10 commits for changelog
+          git log --oneline -10 --pretty=format:"- %s (%an)" >> dist/changelog.txt
+
+      - name: Create build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ets-modules-${{ steps.version.outputs.version }}
+          path: dist/
+          retention-days: 30
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.PROD_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -p ${{ secrets.PROD_PORT }} ${{ secrets.PROD_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to production server
+        run: |
+          # Clean remote directory
+          ssh -p ${{ secrets.PROD_PORT }} ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }} "rm -rf ${{ secrets.PROD_PATH }}/* && mkdir -p ${{ secrets.PROD_PATH }}"
+          
+          # Upload all files from dist to remote server
+          scp -P ${{ secrets.PROD_PORT }} -r dist/* ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }}:${{ secrets.PROD_PATH }}/
+
+      - name: Verify deployment
+        run: |
+          ssh -p ${{ secrets.PROD_PORT }} ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }} "ls -la ${{ secrets.PROD_PATH }}/ && echo 'Deployment successful!'"
+
+      - name: Create GitHub release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.version.outputs.version }}
+          release_name: ETS Modules ${{ steps.version.outputs.version }}
+          body: |
+            Automated build and deployment of ETS modules.
+            
+            **Version:** ${{ steps.version.outputs.version }}
+            **Build Date:** ${{ steps.version.outputs.date }}
+            **Commit:** ${{ steps.version.outputs.sha }}
+            
+            This release has been automatically deployed to the production server.
+          draft: false
+          prerelease: false
