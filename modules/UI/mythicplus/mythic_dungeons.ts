@@ -38,6 +38,11 @@ const mythicBossKill: player_event_on_kill_creature = (
 ) => {
   // if the creature that is killed is a boss from a mythic plus instance lets check the chart to figure out the
   // token reward.
+
+  PrintInfo(`IsBossDbCheck: ${isBossDbCheck(killed.GetEntry())} NAme: ${killed.GetName()}`);
+  const mapId = killer.GetMap().GetMapId();
+  const instanceId = killer.GetInstanceId();
+
   if (
     isInMythicPlus(killer.GetGUID(), killer.GetInstanceId()) &&
     isBossDbCheck(killed.GetEntry())

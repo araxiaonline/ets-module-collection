@@ -49,11 +49,11 @@ const removeVisualSpell: gameobject_event_on_use = (event: number, gameObject: G
 };
 
 // Register All visuals by chest. 
-RegisterGameObjectEvent(RewardChests.Normal, GameObjectEvents.GAMEOBJECT_EVENT_ON_SPAWN, (...args) => showVisualSpell(...args));
-RegisterGameObjectEvent(RewardChests.Normal, GameObjectEvents.GAMEOBJECT_EVENT_ON_USE, (...args) => removeVisualSpell(...args));
+// RegisterGameObjectEvent(RewardChests.Normal, GameObjectEvents.GAMEOBJECT_EVENT_ON_SPAWN, (...args) => showVisualSpell(...args));
+// RegisterGameObjectEvent(RewardChests.Normal, GameObjectEvents.GAMEOBJECT_EVENT_ON_USE, (...args) => removeVisualSpell(...args));
 
-RegisterGameObjectEvent(RewardChests.Elite, GameObjectEvents.GAMEOBJECT_EVENT_ON_SPAWN, (...args) => showVisualSpell(...args));
-RegisterGameObjectEvent(RewardChests.Elite, GameObjectEvents.GAMEOBJECT_EVENT_ON_USE, (...args) => removeVisualSpell(...args));
+// RegisterGameObjectEvent(RewardChests.Elite, GameObjectEvents.GAMEOBJECT_EVENT_ON_SPAWN, (...args) => showVisualSpell(...args));
+// RegisterGameObjectEvent(RewardChests.Elite, GameObjectEvents.GAMEOBJECT_EVENT_ON_USE, (...args) => removeVisualSpell(...args));
 
-RegisterGameObjectEvent(RewardChests.Badass, GameObjectEvents.GAMEOBJECT_EVENT_ON_SPAWN, (...args) => showVisualSpell(...args));
-RegisterGameObjectEvent(RewardChests.Badass,GameObjectEvents.GAMEOBJECT_EVENT_ON_USE, (...args) => removeVisualSpell(...args));
+// RegisterGameObjectEvent(RewardChests.Badass, GameObjectEvents.GAMEOBJECT_EVENT_ON_SPAWN, (...args) => showVisualSpell(...args));
+// RegisterGameObjectEvent(RewardChests.Badass,GameObjectEvents.GAMEOBJECT_EVENT_ON_USE, (...args) => removeVisualSpell(...args));
